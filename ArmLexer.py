@@ -19,6 +19,7 @@ class ArmLexer(object):
 	t_COMMA = r'\,'
 	t_SEMICOLON = r'\;'
 	t_REGISTER = r'R[0-9]+'
+	t_FUNCTIONNAME = r'((?!R[0-9]+)([a-zA-Z_]+[a-zA-Z0-9_]*))'
 	t_ADDRESSNAME = r'[a-zA-Z_]+[a-zA-Z0-9_]*(?=\sEQU.)'
 	t_NUMBER = r'[0-9]+'
 
@@ -32,12 +33,6 @@ class ArmLexer(object):
 				'MOVS\s',	'BEQ\s', 'BNE\s', 'BLT\s', 'BL\s',
 				'BX\s', 'LDR\s', 'STR\s', 'NOP\s']
 		if t.value in reserved:
-			t.type = t.value
-		return t
-
-	def t_FUNCTIONNAME(self, t):
-		r'[a-zA-Z_]+[a-zA-Z0-9_]*'
-		if not(re.search('R[0-9]+', t.value)):
 			t.type = t.value
 		return t
 
