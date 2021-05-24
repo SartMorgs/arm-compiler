@@ -4,6 +4,10 @@ import ply.yacc as yacc
 from ArmLexer import *
 
 class ArmSyntaticPatternParser(object):
+	lexer = ArmLexer()
+	lexer.build()
+	tokens = lexer.tokens
+
 	def p_command(self, p):
 		'''command : ADDRESSNAME OPCODE NUMBER SEMICOLON
 				| OPCODE NUMBER SEMICOLON
@@ -42,7 +46,7 @@ class ArmSyntaticPatternParser(object):
 	def build(self, **kwargs):
 		self.parser = yacc.yacc(module=self, **kwargs)
 
-	def test(self, data):
+	def test(self):
 		while True:
 			try:
 				s = input('Código >')
