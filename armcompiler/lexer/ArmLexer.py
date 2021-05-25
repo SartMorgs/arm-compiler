@@ -7,7 +7,7 @@
 import ply.lex as lex
 import re
 
-class ArmLexer(object):
+class ArmLexer():
 	# List of tokens names
 	tokens = [
 		'COMMA', 'SEMICOLON', 'REGISTER', 'FUNCTIONNAME',
@@ -25,13 +25,17 @@ class ArmLexer(object):
 
 	# A regular expression rule with some action code
 	def t_OPCODE(self, t):
-		r'[A-Z]+(?![0-9]+)\s'
+		r'([A-Z]+(?![0-9]+))(?!([a-zA-Z0-9_]+))'
 		# List of reserved words
-		reserved = ['EQU\s', 'ORG\s', 'END\s', 'ADDS\s', 'SUBS\s',
-				'MULS\s', 'ANDS\s', 'ORRS\s', 'EORS\s', 'BICS\s', 'ASRS',
-				'LSLS\s', 'LSRS\s', 'RORS\s', 'CMN\s', 'CMP\s',
-				'MOVS\s',	'BEQ\s', 'BNE\s', 'BLT\s', 'BL\s',
-				'BX\s', 'LDR\s', 'STR\s', 'NOP\s']
+		reserved = ['EQU(?!([a-zA-Z0-9_]+))', 'ORG(?!([a-zA-Z0-9_]+))', 'END(?!([a-zA-Z0-9_]+))', 
+				'ADDS(?!([a-zA-Z0-9_]+))', 'SUBS(?!([a-zA-Z0-9_]+))', 'MULS(?!([a-zA-Z0-9_]+))', 
+				'ANDS(?!([a-zA-Z0-9_]+))', 'ORRS(?!([a-zA-Z0-9_]+))', 'EORS(?!([a-zA-Z0-9_]+))', 
+				'BICS(?!([a-zA-Z0-9_]+))', 'ASRS(?!([a-zA-Z0-9_]+))', 'LSLS(?!([a-zA-Z0-9_]+))', 
+				'LSRS(?!([a-zA-Z0-9_]+))', 'RORS(?!([a-zA-Z0-9_]+))', 'CMN(?!([a-zA-Z0-9_]+))', 
+				'CMP(?!([a-zA-Z0-9_]+))', 'MOVS(?!([a-zA-Z0-9_]+))', 'BEQ(?!([a-zA-Z0-9_]+))', 
+				'BNE(?!([a-zA-Z0-9_]+))', 'BLT(?!([a-zA-Z0-9_]+))', 'BL(?!([a-zA-Z0-9_]+))',
+				'BX(?!([a-zA-Z0-9_]+))', 'LDR(?!([a-zA-Z0-9_]+))', 'STR(?!([a-zA-Z0-9_]+))', 
+				'NOP(?!([a-zA-Z0-9_]+))']
 		if t.value in reserved:
 			t.type = t.value
 		return t
