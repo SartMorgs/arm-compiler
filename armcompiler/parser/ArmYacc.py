@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 
 # Get the token mar from the lexer
-from ArmLexer import *
+from armcompiler.lexer.ArmLexer import *
 
 class ArmSyntaticPatternParser(object):
 	lexer = ArmLexer()
