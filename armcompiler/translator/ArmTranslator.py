@@ -43,6 +43,10 @@ class ArmTranslator():
 			binary = '0' + binary
 		return binary
 
+	def get_address(self, addr):
+		address = ''.join(format(i, '08b') for i in bytearray(addr, encoding='utf-8'))
+		return address
+
 	def get_instruction_binary_list(self, expression):
 		optype = 'NOP'
 		code_list = []
@@ -55,6 +59,7 @@ class ArmTranslator():
 					instruction.append(self.opcode[optype][0])
 				else:
 					body_instruction = [self.get_register(field) if 'R' in field \
+					else self.get_address(field) if not field.isnumeric() in field \
 					else self.get_number(field, optype) for field in inst]
 					for item in body_instruction:
 						instruction.append(item)

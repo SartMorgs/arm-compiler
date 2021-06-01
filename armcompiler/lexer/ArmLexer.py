@@ -18,8 +18,8 @@ class ArmLexer():
 	t_COMMA = r'\,'
 	t_SEMICOLON = r'\;'
 	t_REGISTER = r'\bR[0-9]+\b'
-	t_FUNCTIONNAME = r'(?<!\#)([a-qs-zA-QS-Z_]+[a-zA-Z0-9_]*)' #(?<!\#.*)
-	t_ADDRESSNAME = r'[a-zA-Z_]+[a-zA-Z0-9_]*(?=\sEQU.)'
+	t_ADDRESSNAME = r'(\b[a-zA-Z_]+[a-zA-Z0-9_]*\b)(?=\sEQU)' #([a-zA-Z_]+[a-zA-Z0-9_]*)
+	t_FUNCTIONNAME = r'((\b[A-Za-z]+[A-Za-z0-9]*\b)(?!\sEQU))(?:\sEQU)' #(?<!\#.*)
 	t_NUMBER = r'[0-9]+'
 
 	# A regular expression rule with some action code
@@ -43,7 +43,8 @@ class ArmLexer():
 		t.lexer.skip(1)
 
 	# Ignored characters
-	t_ignore = '\t+| +|\#[a-zA-Z0-9_]*'
+	t_ignore = '\t+| +'
+	t_ignore_comments = r'[#][^\n]*'
 
 	# Compute column
 	#	input is the input text string
