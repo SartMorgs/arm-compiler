@@ -43,9 +43,9 @@ class ArmTranslator():
 			binary = '0' + binary
 		return binary
 
-	def get_instruction_body(self, expression):
+	def get_instruction_binary_list(self, expression):
 		optype = 'NOP'
-		code = []
+		code_list = []
 		for exp in expression:
 			instruction = []
 			for inst in exp:
@@ -54,8 +54,22 @@ class ArmTranslator():
 					optype = inst
 					instruction.append(self.opcode[optype][0])
 				else:
-					body_instruction = [self.get_register(field) if 'R' in field else self.get_number(field, optype) for field in inst]
+					body_instruction = [self.get_register(field) if 'R' in field \
+					else self.get_number(field, optype) for field in inst]
 					for item in body_instruction:
 						instruction.append(item)
-			code.append(instruction)
-		print(code)
+			code_list.append(instruction)
+		return code_list
+
+	def get_instruction_list(self, code_list):
+		instruction_list = []
+
+		for clist in code_list:
+			code = ''.join([str(item) for item in clist])
+
+			while len(code) < 32:
+				code = code + '0'
+
+			instruction_list.append(code)
+
+		return instruction_list
