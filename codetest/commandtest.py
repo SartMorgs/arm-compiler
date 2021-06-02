@@ -9,6 +9,8 @@ from armcompiler.translator.ArmTranslator import *
 t = ArmTranslator()
 code_list = t.get_instruction_binary_list(expr)
 code_list
+directive_list = t.get_directive_list(expr)
+directive_list
 instruction_list = t.get_instruction_list(code_list)
 instruction_list
 

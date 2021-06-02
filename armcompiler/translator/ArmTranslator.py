@@ -28,6 +28,8 @@ class ArmTranslator():
 			'NOP': 	('111111', '5', '0')
 		}
 
+		self.directives = ['EQU', 'ORG', 'END']
+
 	def get_register(self, reg):
 		register = int(reg.replace('R', ''))
 		binary = bin(register).replace('0b', '')
@@ -57,14 +59,32 @@ class ArmTranslator():
 				if inst in dict_keys:
 					optype = inst
 					instruction.append(self.opcode[optype][0])
-				else:
-					body_instruction = [self.get_register(field) if 'R' in field \
-					else self.get_address(field) if not field.isnumeric() in field \
-					else self.get_number(field, optype) for field in inst]
-					for item in body_instruction:
-						instruction.append(item)
-			code_list.append(instruction)
+				elif inst not in self.directives and not isinstance(inst, str):
+					for field in inst:
+						if 'R' in field:
+							instruction.append(self.get_register(field))
+						elif field.isnumeric():
+							instruction.append(self.get_number(field, optype))
+			if instruction:
+				code_list.append(instruction)
+
 		return code_list
+
+	def get_directive_list(self, expression):
+		direct_list = []
+		for exp in expression:
+			directive = []
+			for inst in exp:
+				if inst in self.directives:
+					directive.append(inst)
+				elif inst not in self.opcode:
+					if isinstance(inst, str):
+						directive.append(inst)
+
+			if directive:
+				direct_list.append(directive)
+
+		return direct_list 					
 
 	def get_instruction_list(self, code_list):
 		instruction_list = []
