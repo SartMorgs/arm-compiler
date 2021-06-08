@@ -1,9 +1,9 @@
 import ply.yacc as yacc
 
-# Get the token mar from the lexer
-from ArmLexer import *
+# Get the token from the lexer
+from armcompiler.lexer.ArmLexer import *
 
-class ArmSyntaticPatternParser(object):
+class ArmSyntaticPatternParser():
 	lexer = ArmLexer()
 	lexer.build()
 	tokens = lexer.tokens
@@ -45,6 +45,13 @@ class ArmSyntaticPatternParser(object):
 	# Build the parser
 	def build(self, **kwargs):
 		self.parser = yacc.yacc(module=self, **kwargs)
+
+	def parsing(self, data):
+		parser_result = []
+		for line in data:
+			result = self.parser.parse(line)
+			parser_result.append(result)
+		return parser_result
 
 	def test(self):
 		while True:

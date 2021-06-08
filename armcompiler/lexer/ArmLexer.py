@@ -7,7 +7,7 @@
 import ply.lex as lex
 import re
 
-class ArmLexer(object):
+class ArmLexer():
 	# List of tokens names
 	tokens = [
 		'COMMA', 'SEMICOLON', 'REGISTER', 'FUNCTIONNAME',
@@ -15,23 +15,21 @@ class ArmLexer(object):
 		]
 
 	# Regular expression rules for simples tokens
-	#t_OPCODE = r'/(^ADDS(?=\s))|(^SUBS(?=\s))|(^LDR(?=\s))|(^STR(?=\s))|(^ORRS(?=\s))|(^ANDS(?=\s))/'
 	t_COMMA = r'\,'
 	t_SEMICOLON = r'\;'
-	t_REGISTER = r'R[0-9]+'
-	t_FUNCTIONNAME = r'((?!R[0-9]+)([a-zA-Z_]+[a-zA-Z0-9_]*))'
-	t_ADDRESSNAME = r'[a-zA-Z_]+[a-zA-Z0-9_]*(?=\sEQU.)'
+	t_REGISTER = r'\bR[0-9]+\b'
+	t_ADDRESSNAME = r'(\b[a-zA-Z_]+[a-zA-Z0-9_]*\b)(?=\sEQU)' #([a-zA-Z_]+[a-zA-Z0-9_]*)
+	t_FUNCTIONNAME = r'((\b[A-Za-z]+[A-Za-z0-9]*\b)(?!\sEQU))(?:\sEQU)' #(?<!\#.*)
 	t_NUMBER = r'[0-9]+'
 
 	# A regular expression rule with some action code
 	def t_OPCODE(self, t):
-		r'[A-Z]+(?![0-9]+)\s'
+		r'([A-Z]+(?![0-9]+))(?!([a-zA-Z0-9_]+))'
 		# List of reserved words
-		reserved = ['EQU\s', 'ORG\s', 'END\s', 'ADDS\s', 'SUBS\s',
-				'MULS\s', 'ANDS\s', 'ORRS\s', 'EORS\s', 'BICS\s', 'ASRS',
-				'LSLS\s', 'LSRS\s', 'RORS\s', 'CMN\s', 'CMP\s',
-				'MOVS\s',	'BEQ\s', 'BNE\s', 'BLT\s', 'BL\s',
-				'BX\s', 'LDR\s', 'STR\s', 'NOP\s']
+		reserved = ['\bEQU\b', '\bORG\b', '\bEND\b', '\bADDS\b', '\bSUBS\b', '\bMULS\b', 
+				'\bANDS\b', '\bORRS\b', '\bEORS\b', '\bBICS\b', '\bASRS\b', '\bLSLS\b', 
+				'\bLSRS\b', '\bRORS\b', '\bCMN\b', '\bCMP\b', '\bMOVS\b', '\bBEQ\b', 
+				'\bBNE\b', '\bBLT\b', '\bBL\b', '\bBX\b', '\bLDR\b', '\bSTR\b', '\bNOP\b']
 		if t.value in reserved:
 			t.type = t.value
 		return t
@@ -45,8 +43,8 @@ class ArmLexer(object):
 		t.lexer.skip(1)
 
 	# Ignored characters
-	t_ignore_COMMENTS = r'/(?:[#]).*/'
 	t_ignore = '\t+| +'
+	t_ignore_comments = r'[#][^\n]*'
 
 	# Compute column
 	#	input is the input text string
