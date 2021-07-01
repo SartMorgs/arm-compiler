@@ -11,8 +11,8 @@ main			PROC								; Inicio do programa principal.
 				BL	func							; Aqui é feita uma chamada de função (func).
 				...
 				...
-				B	main		
-				END									; Fim da área de programa.		
+				B	main										
+													; Fim da área de programa.		
 		
 func			PROC								; Código da função.
 				...
@@ -29,6 +29,9 @@ INT0_Handler	PROC								; Formato das Interrupções. Sempre usar diretiva Hand
 				..
 				..
 				ENDP
+
+				
+				END
 				
 				
 	
