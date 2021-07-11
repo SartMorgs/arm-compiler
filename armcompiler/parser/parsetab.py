@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ADDRESSNAME AREA AREATYPE CODE COMMA END ENDP EQU FUNCTIONNAME INTHANDLER NUMBER OPCODE PROC REGISTERcode : directives main functions interruptions END\n\t\t\t\t| directives main interruptions END\n\t\t\t\t| directives main functions END\n\t\t\t\t| directives main ENDdirectives : directive directives\n\t\t\t\t\t  | directivemain : FUNCTIONNAME PROC commandsfunctions : function functions\n\t\t\t\t\t | functioninterruptions : interruption interruptions\n\t\t\t\t\t\t | interruptioncommands : command commands\n\t\t\t\t\t| command\n\t\tdirective : AREA FUNCTIONNAME COMMA CODE AREATYPE\n\t\t\t\t\t | ADDRESSNAME EQU NUMBERfunction : FUNCTIONNAME PROC command ENDPinterruption : INTHANDLER PROC command ENDPcommand : OPCODE NUMBER\n\t\t\t\t   | OPCODE FUNCTIONNAME\n\t\t\t\t   | OPCODE body\n\t\t\t\t   | OPCODEbody : REGISTER COMMA REGISTER COMMA REGISTER\n\t\t\t\t| REGISTER COMMA REGISTER NUMBER\n\t\t\t\t| REGISTER COMMA NUMBER\n\t\t\t\t| REGISTER COMMA REGISTER\n\t\t\t\t| REGISTER'
+_lr_signature = 'ADDRESSNAME AREA AREATYPE CODE COMMA END ENDP EQU FUNCTIONNAME INTHANDLER NUMBER OPCODE PROC REGISTERcode : labels codetypes main functions interruptions\n\t\t\t\t| codetypes main functions interruptions\n\t\t\t\t| labels codetypes main functions\n\t\t\t\t| codetypes main functions \n\t\t\t\t| labels codetypes main\n\t\t\t\t| codetypes mainmain : FUNCTIONNAME PROC commands ENDcommands : command commands\n\t\t\t\t\t| command\n\t\tlabels : label labels\n\t\t\t\t  | labelcodetypes : codetype codetypes\n\t\t\t\t\t | codetypefunctions : function functions\n\t\t\t\t  \t | functioninterruptions : interruption interruption\n\t\t\t\t  \t \t | interruptionlabel : ADDRESSNAME EQU NUMBERcodetype : AREA FUNCTIONNAME COMMA CODE COMMA AREATYPEfunction : FUNCTIONNAME PROC command ENDPinterruption : INTHANDLER PROC command ENDPcommand : OPCODE NUMBER\n\t\t\t\t   | OPCODE FUNCTIONNAME\n\t\t\t\t   | OPCODE body\n\t\t\t\t   | OPCODEbody : REGISTER COMMA REGISTER COMMA REGISTER\n\t\t\t\t| REGISTER COMMA REGISTER NUMBER\n\t\t\t\t| REGISTER COMMA NUMBER\n\t\t\t\t| REGISTER COMMA REGISTER\n\t\t\t\t| REGISTER'
     
-_lr_action_items = {'AREA':([0,3,20,40,],[4,4,-15,-14,]),'ADDRESSNAME':([0,3,20,40,],[5,5,-15,-14,]),'$end':([1,13,22,23,32,],[0,-4,-3,-2,-1,]),'FUNCTIONNAME':([2,3,4,6,8,14,20,28,29,30,35,36,37,38,39,40,41,44,45,47,48,],[7,-6,9,16,-5,16,-15,-7,-13,37,-12,-18,-19,-20,-26,-14,-16,-25,-24,-23,-22,]),'EQU':([5,],[10,]),'END':([6,11,12,14,15,21,24,25,28,29,30,35,36,37,38,39,41,42,44,45,47,48,],[13,22,23,-9,-11,32,-8,-10,-7,-13,-21,-12,-18,-19,-20,-26,-16,-17,-25,-24,-23,-22,]),'INTHANDLER':([6,11,14,15,24,28,29,30,35,36,37,38,39,41,42,44,45,47,48,],[17,17,-9,17,-8,-7,-13,-21,-12,-18,-19,-20,-26,-16,-17,-25,-24,-23,-22,]),'PROC':([7,16,17,],[18,26,27,]),'COMMA':([9,39,44,],[19,43,46,]),'NUMBER':([10,30,43,44,],[20,36,45,47,]),'OPCODE':([18,26,27,29,30,36,37,38,39,44,45,47,48,],[30,30,30,30,-21,-18,-19,-20,-26,-25,-24,-23,-22,]),'CODE':([19,],[31,]),'ENDP':([30,33,34,36,37,38,39,44,45,47,48,],[-21,41,42,-18,-19,-20,-26,-25,-24,-23,-22,]),'REGISTER':([30,43,46,],[39,44,48,]),'AREATYPE':([31,],[40,]),}
+_lr_action_items = {'ADDRESSNAME':([0,4,20,],[6,6,-18,]),'AREA':([0,2,4,5,11,20,46,],[7,7,-11,7,-10,-18,-19,]),'$end':([1,9,15,16,17,22,23,24,26,32,33,36,44,47,],[0,-6,-5,-4,-15,-3,-2,-17,-14,-1,-16,-7,-20,-21,]),'FUNCTIONNAME':([3,5,7,8,9,12,15,17,30,36,44,46,],[10,-13,14,10,18,-12,18,18,39,-7,-20,-19,]),'EQU':([6,],[13,]),'PROC':([10,18,25,],[19,27,34,]),'NUMBER':([13,30,45,48,],[20,38,49,51,]),'COMMA':([14,31,41,48,],[21,42,45,50,]),'INTHANDLER':([16,17,22,24,26,44,47,],[25,-15,25,25,-14,-20,-21,]),'OPCODE':([19,27,29,30,34,38,39,40,41,48,49,51,52,],[30,30,30,-25,30,-22,-23,-24,-30,-29,-28,-27,-26,]),'CODE':([21,],[31,]),'END':([28,29,30,37,38,39,40,41,48,49,51,52,],[36,-9,-25,-8,-22,-23,-24,-30,-29,-28,-27,-26,]),'ENDP':([30,35,38,39,40,41,43,48,49,51,52,],[-25,44,-22,-23,-24,-30,47,-29,-28,-27,-26,]),'REGISTER':([30,45,50,],[41,48,52,]),'AREATYPE':([42,],[46,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'code':([0,],[1,]),'directives':([0,3,],[2,8,]),'directive':([0,3,],[3,3,]),'main':([2,],[6,]),'functions':([6,14,],[11,24,]),'interruptions':([6,11,15,],[12,21,25,]),'function':([6,14,],[14,14,]),'interruption':([6,11,15,],[15,15,15,]),'commands':([18,29,],[28,35,]),'command':([18,26,27,29,],[29,33,34,29,]),'body':([30,],[38,]),}
+_lr_goto_items = {'code':([0,],[1,]),'labels':([0,4,],[2,11,]),'codetypes':([0,2,5,],[3,8,12,]),'label':([0,4,],[4,4,]),'codetype':([0,2,5,],[5,5,5,]),'main':([3,8,],[9,15,]),'functions':([9,15,17,],[16,22,26,]),'function':([9,15,17,],[17,17,17,]),'interruptions':([16,22,],[23,32,]),'interruption':([16,22,24,],[24,24,33,]),'commands':([19,29,],[28,37,]),'command':([19,27,29,34,],[29,35,29,43,]),'body':([30,],[40,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,30 +27,34 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> code","S'",1,None,None,None),
-  ('code -> directives main functions interruptions END','code',5,'p_code','ArmYacc.py',12),
-  ('code -> directives main interruptions END','code',4,'p_code','ArmYacc.py',13),
-  ('code -> directives main functions END','code',4,'p_code','ArmYacc.py',14),
-  ('code -> directives main END','code',3,'p_code','ArmYacc.py',15),
-  ('directives -> directive directives','directives',2,'p_directives','ArmYacc.py',24),
-  ('directives -> directive','directives',1,'p_directives','ArmYacc.py',25),
-  ('main -> FUNCTIONNAME PROC commands','main',3,'p_main','ArmYacc.py',33),
-  ('functions -> function functions','functions',2,'p_functions','ArmYacc.py',37),
-  ('functions -> function','functions',1,'p_functions','ArmYacc.py',38),
-  ('interruptions -> interruption interruptions','interruptions',2,'p_interruptions','ArmYacc.py',45),
-  ('interruptions -> interruption','interruptions',1,'p_interruptions','ArmYacc.py',46),
-  ('commands -> command commands','commands',2,'p_commands','ArmYacc.py',53),
-  ('commands -> command','commands',1,'p_commands','ArmYacc.py',54),
-  ('directive -> AREA FUNCTIONNAME COMMA CODE AREATYPE','directive',5,'p_directive','ArmYacc.py',62),
-  ('directive -> ADDRESSNAME EQU NUMBER','directive',3,'p_directive','ArmYacc.py',63),
-  ('function -> FUNCTIONNAME PROC command ENDP','function',4,'p_function','ArmYacc.py',71),
-  ('interruption -> INTHANDLER PROC command ENDP','interruption',4,'p_interruption','ArmYacc.py',75),
-  ('command -> OPCODE NUMBER','command',2,'p_command','ArmYacc.py',79),
-  ('command -> OPCODE FUNCTIONNAME','command',2,'p_command','ArmYacc.py',80),
-  ('command -> OPCODE body','command',2,'p_command','ArmYacc.py',81),
-  ('command -> OPCODE','command',1,'p_command','ArmYacc.py',82),
-  ('body -> REGISTER COMMA REGISTER COMMA REGISTER','body',5,'p_body','ArmYacc.py',91),
-  ('body -> REGISTER COMMA REGISTER NUMBER','body',4,'p_body','ArmYacc.py',92),
-  ('body -> REGISTER COMMA NUMBER','body',3,'p_body','ArmYacc.py',93),
-  ('body -> REGISTER COMMA REGISTER','body',3,'p_body','ArmYacc.py',94),
-  ('body -> REGISTER','body',1,'p_body','ArmYacc.py',95),
+  ('code -> labels codetypes main functions interruptions','code',5,'p_code','ArmYacc.py',12),
+  ('code -> codetypes main functions interruptions','code',4,'p_code','ArmYacc.py',13),
+  ('code -> labels codetypes main functions','code',4,'p_code','ArmYacc.py',14),
+  ('code -> codetypes main functions','code',3,'p_code','ArmYacc.py',15),
+  ('code -> labels codetypes main','code',3,'p_code','ArmYacc.py',16),
+  ('code -> codetypes main','code',2,'p_code','ArmYacc.py',17),
+  ('main -> FUNCTIONNAME PROC commands END','main',4,'p_main','ArmYacc.py',28),
+  ('commands -> command commands','commands',2,'p_commands','ArmYacc.py',32),
+  ('commands -> command','commands',1,'p_commands','ArmYacc.py',33),
+  ('labels -> label labels','labels',2,'p_labels','ArmYacc.py',41),
+  ('labels -> label','labels',1,'p_labels','ArmYacc.py',42),
+  ('codetypes -> codetype codetypes','codetypes',2,'p_codetypes','ArmYacc.py',49),
+  ('codetypes -> codetype','codetypes',1,'p_codetypes','ArmYacc.py',50),
+  ('functions -> function functions','functions',2,'p_functions','ArmYacc.py',57),
+  ('functions -> function','functions',1,'p_functions','ArmYacc.py',58),
+  ('interruptions -> interruption interruption','interruptions',2,'p_interruptions','ArmYacc.py',65),
+  ('interruptions -> interruption','interruptions',1,'p_interruptions','ArmYacc.py',66),
+  ('label -> ADDRESSNAME EQU NUMBER','label',3,'p_label','ArmYacc.py',74),
+  ('codetype -> AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE','codetype',6,'p_codetype','ArmYacc.py',78),
+  ('function -> FUNCTIONNAME PROC command ENDP','function',4,'p_function','ArmYacc.py',82),
+  ('interruption -> INTHANDLER PROC command ENDP','interruption',4,'p_interruption','ArmYacc.py',86),
+  ('command -> OPCODE NUMBER','command',2,'p_command','ArmYacc.py',90),
+  ('command -> OPCODE FUNCTIONNAME','command',2,'p_command','ArmYacc.py',91),
+  ('command -> OPCODE body','command',2,'p_command','ArmYacc.py',92),
+  ('command -> OPCODE','command',1,'p_command','ArmYacc.py',93),
+  ('body -> REGISTER COMMA REGISTER COMMA REGISTER','body',5,'p_body','ArmYacc.py',102),
+  ('body -> REGISTER COMMA REGISTER NUMBER','body',4,'p_body','ArmYacc.py',103),
+  ('body -> REGISTER COMMA NUMBER','body',3,'p_body','ArmYacc.py',104),
+  ('body -> REGISTER COMMA REGISTER','body',3,'p_body','ArmYacc.py',105),
+  ('body -> REGISTER','body',1,'p_body','ArmYacc.py',106),
 ]

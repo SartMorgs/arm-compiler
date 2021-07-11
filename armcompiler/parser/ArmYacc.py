@@ -9,66 +9,74 @@ class ArmSyntaticPatternParser():
 	tokens = lexer.tokens
 
 	def p_code(self, p):
-		'''code : directives main functions interruptions END
-				| directives main interruptions END
-				| directives main functions END
-				| directives main END'''
+		'''code : labels codetypes main functions interruptions
+				| codetypes main functions interruptions
+				| labels codetypes main functions
+				| codetypes main functions 
+				| labels codetypes main
+				| codetypes main'''
 		if len(p) == 6:
 			p[0] = (p[1], p[2], p[3], p[4], p[5])
 		elif len(p) == 5:
 			p[0] = (p[1], p[2], p[3], p[4])
-		else:
+		elif len(p) == 4:
 			p[0] = (p[1], p[2], p[3])
-
-	def p_directives(self, p):
-		'''directives : directive directives
-					  | directive'''
-
-		if len(p) == 3:
-			p[0] = (p[1], p[2])
 		else:
-			p[0] = p[1]
+			p[0] = (p[1], p[2])
 
 	def p_main(self, p):
-		'''main : FUNCTIONNAME PROC commands'''
-		p[0] = p[1]
-
-	def p_functions(self, p):
-		'''functions : function functions
-					 | function'''
-		if len(p) == 3:
-			p[0] = (p[1], p[2])
-		else:
-			p[0] = p[1]
-
-	def p_interruptions(self, p):
-		'''interruptions : interruption interruptions
-						 | interruption'''
-		if len(p) == 3:
-			p[0] = (p[1], p[2])
-		else:
-			p[0] = p[1]
+		'''main : FUNCTIONNAME PROC commands END'''
+		p[0] = (p[1], p[2], p[3], p[4])
 
 	def p_commands(self, p):
 		'''commands : command commands
 					| command
 		'''
 		if len(p) == 3:
-			p[0] = (p[1], p[2])
+			p[0] = f'{p[1]} | {p[2]} |'
 		else:
 			p[0] = p[1]
 
-	def p_directive(self, p):
-		'''directive : AREA FUNCTIONNAME COMMA CODE AREATYPE
-					 | ADDRESSNAME EQU NUMBER'''
-		if len(p) == 6:
-			p[0] = (p[1],  p[2],  p[4], p[5])
-			print('len6')
-			#print(f'p[1].value = {p[1].value}; p[2].value = {p[2].value}; p[4].value = {p[4].value}; p[5].value = {p[5].value}')
+	def p_labels(self, p):
+		'''labels : label labels
+				  | label'''
+		if len(p) == 3:
+			p[0] = f'{p[1]} | {p[2]}'
 		else:
-			p[0] = (p[1], p[2], p[3])
-			print('len!=6')
+			p[0] = p[1]
 
+	def p_codetypes(self, p):
+		'''codetypes : codetype codetypes
+					 | codetype'''
+		if len(p) == 3:
+			p[0] = f'{p[1]} | {p[2]} |'
+		else:
+			p[0] = p[1]
+
+	def p_functions(self, p):
+		'''functions : function functions
+				  	 | function'''
+		if len(p) == 3:
+			p[0] = f'{p[1]} | {p[2]} |'
+		else:
+			p[0] = p[1]
+
+	def p_interruptions(self, p):
+		'''interruptions : interruption interruption
+				  	 	 | interruption'''
+		if len(p) == 3:
+			p[0] = f'{p[1]} | {p[2]} |'
+		else:
+			p[0] = p[1]
+
+
+	def p_label(self, p):
+		'''label : ADDRESSNAME EQU NUMBER'''
+		p[0] = (p[1], p[2], p[3])
+
+	def p_codetype(self, p):
+		'''codetype : AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE'''
+		p[0] = (p[1], p[2], p[4], p[6])
 
 	def p_function(self, p):
 		'''function : FUNCTIONNAME PROC command ENDP'''
@@ -85,8 +93,6 @@ class ArmSyntaticPatternParser():
 				   | OPCODE'''
 		if len(p) == 3:
 			p[0] = (p[1], p[2])
-		elif len(p) == 2:
-			p[0] = p[1]
 		else:
 			p[0] = p[1]
 
@@ -97,11 +103,11 @@ class ArmSyntaticPatternParser():
 				| REGISTER COMMA REGISTER
 				| REGISTER'''
 		if len(p) == 6:
-			p[0] = (p[1], p[3], p[5])
+			p[0] = f'{p[1]}; {p[3]}; {p[5]};'
 		elif len(p) == 5:
-			p[0] = (p[1], p[3], p[4])
+			p[0] = f'{p[1]}; {p[3]}; {p[4]};'
 		elif len(p) == 4:
-			p[0] = (p[1], p[3])
+			p[0] = f'{p[1]}; {p[3]};'
 		else:
 			p[0] = p[1]
 

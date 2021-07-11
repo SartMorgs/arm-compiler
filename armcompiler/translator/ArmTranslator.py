@@ -28,7 +28,7 @@ class ArmTranslator():
 			'NOP': 	('111111', '5', '0')
 		}
 
-		self.directives = ['EQU', 'ORG', 'END']
+		self.reserved = ['EQU', 'ORG', 'AREA', 'CODE', 'READONLY', 'READWRITE', 'PROC', 'END', 'ENDP']
 
 	def get_register(self, reg):
 		register = int(reg.replace('R', ''))
@@ -39,7 +39,7 @@ class ArmTranslator():
 
 	def get_number(self, value, optype='NOP'):
 		length = int(self.opcode[optype][2])
-		number = int(value)
+		number = int(value, 16)
 		binary = bin(number).replace('0b', '')
 		while len(binary) < length:
 			binary = '0' + binary
@@ -49,33 +49,56 @@ class ArmTranslator():
 		address = ''.join(format(i, '08b') for i in bytearray(addr, encoding='utf-8'))
 		return address
 
+	def get_instruction_parsed_splited(self, expression):
+		instructions_blocks = {}
+		function = ''
+
+		instructions_blocks['directive'] = []
+
+		for exp in expression:
+			if 'PROC' in exp:
+				function = exp[0]
+			else:
+				instructions_blocks['directive'].append(exp)
+			for block in exp:
+				if '|' in block:
+					instructions_assembly = block.replace(';', ',').replace(' ', '').split('|')
+
+					instructions_blocks[function] = instructions_assembly
+
+		return instructions_blocks
+
 	def get_instruction_binary_list(self, expression):
 		optype = 'NOP'
-		code_list = []
-		for exp in expression:
-			instruction = []
-			for inst in exp:
-				dict_keys = [key for key in self.opcode.keys()]
-				if inst in dict_keys:
-					optype = inst
-					instruction.append(self.opcode[optype][0])
-				elif inst not in self.directives and not isinstance(inst, str):
-					for field in inst:
-						if 'R' in field:
-							instruction.append(self.get_register(field))
-						elif field.isnumeric():
-							instruction.append(self.get_number(field, optype))
-			if instruction:
-				code_list.append(instruction)
+		dict_keys = [key for key in self.opcode.keys()]
+		binary_code_list = {}
 
-		return code_list
+		for key, value in expression.items():
+			if key != 'directive':
+				binary_code_list[key] = []
+				for iten in value:
+					try:
+						instruction = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
+						print(instruction)
+						for inst_value in instruction:
+							if inst_value in dict_keys:
+								optype = inst_value
+								binary_code_list[key].append(self.opcode[inst_value][0])
+							elif 'R' in inst_value:
+								binary_code_list[key].append(self.get_register(inst_value))
+							elif '0x' in inst_value:
+								binary_code_list[key].append(self.get_number(inst_value, optype))
+					except Exception as e:
+						return e.message
+
+		return binary_code_list
 
 	def get_directive_list(self, expression):
 		direct_list = []
 		for exp in expression:
 			directive = []
 			for inst in exp:
-				if inst in self.directives:
+				if inst in self.reserved:
 					directive.append(inst)
 				elif inst not in self.opcode:
 					if isinstance(inst, str):
