@@ -21,59 +21,68 @@ class ArmSyntaticPatternParser():
 			p[0] = (p[1], p[2], p[3])
 
 	def p_directives(self, p):
-		'''directives : directive'''
-		p[0] = p[1]
+		'''directives : directive directives
+					  | directive'''
+
+		if len(p) == 3:
+			p[0] = (p[1], p[2])
+		else:
+			p[0] = p[1]
 
 	def p_main(self, p):
-		'''main : FUNCTIONNAME PROC command'''
+		'''main : FUNCTIONNAME PROC commands'''
 		p[0] = p[1]
 
 	def p_functions(self, p):
-		'''functions : function'''
-		p[0] = p[1]
+		'''functions : function functions
+					 | function'''
+		if len(p) == 3:
+			p[0] = (p[1], p[2])
+		else:
+			p[0] = p[1]
 
 	def p_interruptions(self, p):
-		'''interruptions : interruption'''
-		p[0] = p[1]
+		'''interruptions : interruption interruptions
+						 | interruption'''
+		if len(p) == 3:
+			p[0] = (p[1], p[2])
+		else:
+			p[0] = p[1]
+
+	def p_commands(self, p):
+		'''commands : command commands
+					| command
+		'''
+		if len(p) == 3:
+			p[0] = (p[1], p[2])
+		else:
+			p[0] = p[1]
 
 	def p_directive(self, p):
 		'''directive : AREA FUNCTIONNAME COMMA CODE AREATYPE
-					 | ADDRESSNAME EQU NUMBER
-					 | directive
-					 | '''
+					 | ADDRESSNAME EQU NUMBER'''
 		if len(p) == 6:
 			p[0] = (p[1],  p[2],  p[4], p[5])
-		elif len(p) == 4:
-			p[0] = (p[1], p[2], p[3])
+			print('len6')
+			#print(f'p[1].value = {p[1].value}; p[2].value = {p[2].value}; p[4].value = {p[4].value}; p[5].value = {p[5].value}')
 		else:
-			p[0] = p[1]
+			p[0] = (p[1], p[2], p[3])
+			print('len!=6')
 
 
 	def p_function(self, p):
-		'''function : FUNCTIONNAME PROC command ENDP
-					| function
-					| '''
-		if len(p) == 5:
-			p[0] = (p[1], p[2], p[3], p[4])
-		else:
-			p[0] = p[1]
+		'''function : FUNCTIONNAME PROC command ENDP'''
+		p[0] = (p[1], p[2], p[3], p[4])
 
 	def p_interruption(self, p):
-		'''interruption : INTHANDLER PROC command ENDP
-						| interruption
-						| '''
-		if len(p) == 5:
-			p[0] = (p[1], p[2], p[3], p[4])
-		else:
-			p[0] = p[1]
+		'''interruption : INTHANDLER PROC command ENDP'''
+		p[0] = (p[1], p[2], p[3], p[4])
 
 	def p_command(self, p):
 		'''command : OPCODE NUMBER
 				   | OPCODE FUNCTIONNAME
 				   | OPCODE body
-				   | OPCODE
-				   | command
-				   | '''
+				   | OPCODE'''
 		if len(p) == 3:
 			p[0] = (p[1], p[2])
 		elif len(p) == 2:
@@ -86,8 +95,7 @@ class ArmSyntaticPatternParser():
 				| REGISTER COMMA REGISTER NUMBER
 				| REGISTER COMMA NUMBER
 				| REGISTER COMMA REGISTER
-				| REGISTER
-				| '''
+				| REGISTER'''
 		if len(p) == 6:
 			p[0] = (p[1], p[3], p[5])
 		elif len(p) == 5:

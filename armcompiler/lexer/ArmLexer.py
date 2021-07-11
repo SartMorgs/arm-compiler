@@ -10,7 +10,7 @@ import re
 class ArmLexer():
 	# List of tokens names
 	tokens = [
-		'EQU', 'AREA', 'END', 'ENDP', 'CODE', 'ORG', 'PROC', 'AREATYPE', 'INTHANDLER',
+		'EQU', 'AREA', 'END', 'ENDP', 'CODE', 'PROC', 'AREATYPE', 'INTHANDLER',
 		'COMMA', 'REGISTER', 'FUNCTIONNAME', 'ADDRESSNAME', 'NUMBER', 'OPCODE'
 	]
 
@@ -20,7 +20,6 @@ class ArmLexer():
 	t_END = r'\bEND\b'
 	t_ENDP = r'\bENDP\b'
 	t_CODE = r'\bCODE\b'
-	t_ORG = r'\bORG\b'
 	t_PROC = r'\bPROC\b'
 
 	t_COMMA = r'\,'
@@ -33,8 +32,8 @@ class ArmLexer():
 
 	t_INTHANDLER = r'\bINT0_Handler\b|\bINT1_Handler\b|\bINT2_Handler\b|\bINT3_Handler\b|\bINT4_Handler\b|\bINT5_Handler\b|\bINT6_Handler\b|\bINT7_Handler\b|\bINT8_Handler\b|\bINT9_Handler\b|\bINT10_Handler\b|\bINT11_Handler\b|\bINT12_Handler\b|\bINT13_Handler\b|\bINT14_Handler\b|\bINT15_Handler\b|\bINT16_Handler\b'
 	
-	t_ADDRESSNAME = r'(\b[a-zA-Z_]+[a-zA-Z0-9_]*[^\sEQU|^\sAREA|^\sEND|^\sENDP|^\sCODE|^\sORG|^\sPROC|^\sREADONLY|^\sREADWRITE]\b)(?=\sEQU)' #([a-zA-Z_]+[a-zA-Z0-9_]*)
-	t_FUNCTIONNAME = r'((\b[A-Za-z]+[A-Za-z0-9]*[^\sEQU|^\sAREA|^\sEND|^\sENDP|^\sCODE|^\sORG|^\sPROC|^\sREADONLY|^\sREADWRITE]\b))(?!\sEQU)' #(?<!\#.*) (?:\sEQU)
+	t_ADDRESSNAME = r'(\b[a-z_]+[a-z0-9_]*[^\sEQU|^\sAREA|^\sEND|^\sENDP|^\sCODE|^\sORG|^\sPROC|^\sREADONLY|^\sREADWRITE]\b)(?=\sEQU)' #([a-zA-Z_]+[a-zA-Z0-9_]*)
+	t_FUNCTIONNAME = r'((\b[a-z_]+[a-z0-9_]*[^\sEQU|^\sAREA|^\sEND|^\sENDP|^\sCODE|^\sORG|^\sPROC|^\sREADONLY|^\sREADWRITE]\b))(?!\sEQU)' #(?<!\#.*) (?:\sEQU)
 
 	def t_newline(self, t):
 		r'\n+'
