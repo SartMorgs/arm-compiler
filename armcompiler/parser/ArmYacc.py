@@ -9,24 +9,24 @@ class ArmSyntaticPatternParser():
 	tokens = lexer.tokens
 
 	def p_code(self, p):
-		'''code : labels codetypes main functions interruptions
-				| codetypes main functions interruptions
-				| labels codetypes main functions
-				| codetypes main functions 
-				| labels codetypes main
-				| codetypes main'''
-		if len(p) == 6:
+		'''code : labels codetypes main functions interruptions END
+				| codetypes main functions interruptions END
+				| labels codetypes main functions END
+				| codetypes main functions END
+				| labels codetypes main END
+				| codetypes main END'''
+		if len(p) == 7:
+			p[0] = (p[1], p[2], p[3], p[4], p[5], p[6])
+		elif len(p) == 6:
 			p[0] = (p[1], p[2], p[3], p[4], p[5])
 		elif len(p) == 5:
 			p[0] = (p[1], p[2], p[3], p[4])
-		elif len(p) == 4:
-			p[0] = (p[1], p[2], p[3])
 		else:
-			p[0] = (p[1], p[2])
+			p[0] = (p[1], p[2], p[3])
 
 	def p_main(self, p):
-		'''main : FUNCTIONNAME PROC commands END'''
-		p[0] = (p[1], p[2], p[3], p[4])
+		'''main : FUNCTIONNAME PROC commands'''
+		p[0] = (p[1], p[2], p[3])
 
 	def p_commands(self, p):
 		'''commands : command commands
@@ -79,11 +79,11 @@ class ArmSyntaticPatternParser():
 		p[0] = (p[1], p[2], p[4], p[6])
 
 	def p_function(self, p):
-		'''function : FUNCTIONNAME PROC command ENDP'''
+		'''function : FUNCTIONNAME PROC commands ENDP'''
 		p[0] = (p[1], p[2], p[3], p[4])
 
 	def p_interruption(self, p):
-		'''interruption : INTHANDLER PROC command ENDP'''
+		'''interruption : INTHANDLER PROC commands ENDP'''
 		p[0] = (p[1], p[2], p[3], p[4])
 
 	def p_command(self, p):

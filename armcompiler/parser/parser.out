@@ -3,13 +3,13 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Grammar
 
 Rule 0     S' -> code
-Rule 1     code -> labels codetypes main functions interruptions
-Rule 2     code -> codetypes main functions interruptions
-Rule 3     code -> labels codetypes main functions
-Rule 4     code -> codetypes main functions
-Rule 5     code -> labels codetypes main
-Rule 6     code -> codetypes main
-Rule 7     main -> FUNCTIONNAME PROC commands END
+Rule 1     code -> labels codetypes main functions interruptions END
+Rule 2     code -> codetypes main functions interruptions END
+Rule 3     code -> labels codetypes main functions END
+Rule 4     code -> codetypes main functions END
+Rule 5     code -> labels codetypes main END
+Rule 6     code -> codetypes main END
+Rule 7     main -> FUNCTIONNAME PROC commands
 Rule 8     commands -> command commands
 Rule 9     commands -> command
 Rule 10    labels -> label labels
@@ -22,8 +22,8 @@ Rule 16    interruptions -> interruption interruption
 Rule 17    interruptions -> interruption
 Rule 18    label -> ADDRESSNAME EQU NUMBER
 Rule 19    codetype -> AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE
-Rule 20    function -> FUNCTIONNAME PROC command ENDP
-Rule 21    interruption -> INTHANDLER PROC command ENDP
+Rule 20    function -> FUNCTIONNAME PROC commands ENDP
+Rule 21    interruption -> INTHANDLER PROC commands ENDP
 Rule 22    command -> OPCODE NUMBER
 Rule 23    command -> OPCODE FUNCTIONNAME
 Rule 24    command -> OPCODE body
@@ -41,7 +41,7 @@ AREA                 : 19
 AREATYPE             : 19
 CODE                 : 19
 COMMA                : 19 19 26 26 27 28 29
-END                  : 7
+END                  : 1 2 3 4 5 6
 ENDP                 : 20 21
 EQU                  : 18
 FUNCTIONNAME         : 7 19 20 23
@@ -58,8 +58,8 @@ body                 : 24
 code                 : 0
 codetype             : 12 13
 codetypes            : 1 2 3 4 5 6 12
-command              : 8 9 20 21
-commands             : 7 8
+command              : 8 9
+commands             : 7 8 20 21
 function             : 14 15
 functions            : 1 2 3 4 14
 interruption         : 16 16 17
@@ -73,12 +73,12 @@ Parsing method: LALR
 state 0
 
     (0) S' -> . code
-    (1) code -> . labels codetypes main functions interruptions
-    (2) code -> . codetypes main functions interruptions
-    (3) code -> . labels codetypes main functions
-    (4) code -> . codetypes main functions
-    (5) code -> . labels codetypes main
-    (6) code -> . codetypes main
+    (1) code -> . labels codetypes main functions interruptions END
+    (2) code -> . codetypes main functions interruptions END
+    (3) code -> . labels codetypes main functions END
+    (4) code -> . codetypes main functions END
+    (5) code -> . labels codetypes main END
+    (6) code -> . codetypes main END
     (10) labels -> . label labels
     (11) labels -> . label
     (12) codetypes -> . codetype codetypes
@@ -103,9 +103,9 @@ state 1
 
 state 2
 
-    (1) code -> labels . codetypes main functions interruptions
-    (3) code -> labels . codetypes main functions
-    (5) code -> labels . codetypes main
+    (1) code -> labels . codetypes main functions interruptions END
+    (3) code -> labels . codetypes main functions END
+    (5) code -> labels . codetypes main END
     (12) codetypes -> . codetype codetypes
     (13) codetypes -> . codetype
     (19) codetype -> . AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE
@@ -117,10 +117,10 @@ state 2
 
 state 3
 
-    (2) code -> codetypes . main functions interruptions
-    (4) code -> codetypes . main functions
-    (6) code -> codetypes . main
-    (7) main -> . FUNCTIONNAME PROC commands END
+    (2) code -> codetypes . main functions interruptions END
+    (4) code -> codetypes . main functions END
+    (6) code -> codetypes . main END
+    (7) main -> . FUNCTIONNAME PROC commands
 
     FUNCTIONNAME    shift and go to state 10
 
@@ -170,10 +170,10 @@ state 7
 
 state 8
 
-    (1) code -> labels codetypes . main functions interruptions
-    (3) code -> labels codetypes . main functions
-    (5) code -> labels codetypes . main
-    (7) main -> . FUNCTIONNAME PROC commands END
+    (1) code -> labels codetypes . main functions interruptions END
+    (3) code -> labels codetypes . main functions END
+    (5) code -> labels codetypes . main END
+    (7) main -> . FUNCTIONNAME PROC commands
 
     FUNCTIONNAME    shift and go to state 10
 
@@ -181,24 +181,24 @@ state 8
 
 state 9
 
-    (2) code -> codetypes main . functions interruptions
-    (4) code -> codetypes main . functions
-    (6) code -> codetypes main .
+    (2) code -> codetypes main . functions interruptions END
+    (4) code -> codetypes main . functions END
+    (6) code -> codetypes main . END
     (14) functions -> . function functions
     (15) functions -> . function
-    (20) function -> . FUNCTIONNAME PROC command ENDP
+    (20) function -> . FUNCTIONNAME PROC commands ENDP
 
-    $end            reduce using rule 6 (code -> codetypes main .)
-    FUNCTIONNAME    shift and go to state 18
+    END             shift and go to state 17
+    FUNCTIONNAME    shift and go to state 19
 
     functions                      shift and go to state 16
-    function                       shift and go to state 17
+    function                       shift and go to state 18
 
 state 10
 
-    (7) main -> FUNCTIONNAME . PROC commands END
+    (7) main -> FUNCTIONNAME . PROC commands
 
-    PROC            shift and go to state 19
+    PROC            shift and go to state 20
 
 
 state 11
@@ -219,70 +219,77 @@ state 13
 
     (18) label -> ADDRESSNAME EQU . NUMBER
 
-    NUMBER          shift and go to state 20
+    NUMBER          shift and go to state 21
 
 
 state 14
 
     (19) codetype -> AREA FUNCTIONNAME . COMMA CODE COMMA AREATYPE
 
-    COMMA           shift and go to state 21
+    COMMA           shift and go to state 22
 
 
 state 15
 
-    (1) code -> labels codetypes main . functions interruptions
-    (3) code -> labels codetypes main . functions
-    (5) code -> labels codetypes main .
+    (1) code -> labels codetypes main . functions interruptions END
+    (3) code -> labels codetypes main . functions END
+    (5) code -> labels codetypes main . END
     (14) functions -> . function functions
     (15) functions -> . function
-    (20) function -> . FUNCTIONNAME PROC command ENDP
+    (20) function -> . FUNCTIONNAME PROC commands ENDP
 
-    $end            reduce using rule 5 (code -> labels codetypes main .)
-    FUNCTIONNAME    shift and go to state 18
+    END             shift and go to state 24
+    FUNCTIONNAME    shift and go to state 19
 
-    functions                      shift and go to state 22
-    function                       shift and go to state 17
+    functions                      shift and go to state 23
+    function                       shift and go to state 18
 
 state 16
 
-    (2) code -> codetypes main functions . interruptions
-    (4) code -> codetypes main functions .
+    (2) code -> codetypes main functions . interruptions END
+    (4) code -> codetypes main functions . END
     (16) interruptions -> . interruption interruption
     (17) interruptions -> . interruption
-    (21) interruption -> . INTHANDLER PROC command ENDP
+    (21) interruption -> . INTHANDLER PROC commands ENDP
 
-    $end            reduce using rule 4 (code -> codetypes main functions .)
-    INTHANDLER      shift and go to state 25
+    END             shift and go to state 26
+    INTHANDLER      shift and go to state 28
 
-    interruptions                  shift and go to state 23
-    interruption                   shift and go to state 24
+    interruptions                  shift and go to state 25
+    interruption                   shift and go to state 27
 
 state 17
+
+    (6) code -> codetypes main END .
+
+    $end            reduce using rule 6 (code -> codetypes main END .)
+
+
+state 18
 
     (14) functions -> function . functions
     (15) functions -> function .
     (14) functions -> . function functions
     (15) functions -> . function
-    (20) function -> . FUNCTIONNAME PROC command ENDP
+    (20) function -> . FUNCTIONNAME PROC commands ENDP
 
+    END             reduce using rule 15 (functions -> function .)
     INTHANDLER      reduce using rule 15 (functions -> function .)
-    $end            reduce using rule 15 (functions -> function .)
-    FUNCTIONNAME    shift and go to state 18
+    FUNCTIONNAME    shift and go to state 19
 
-    function                       shift and go to state 17
-    functions                      shift and go to state 26
-
-state 18
-
-    (20) function -> FUNCTIONNAME . PROC command ENDP
-
-    PROC            shift and go to state 27
-
+    function                       shift and go to state 18
+    functions                      shift and go to state 29
 
 state 19
 
-    (7) main -> FUNCTIONNAME PROC . commands END
+    (20) function -> FUNCTIONNAME . PROC commands ENDP
+
+    PROC            shift and go to state 30
+
+
+state 20
+
+    (7) main -> FUNCTIONNAME PROC . commands
     (8) commands -> . command commands
     (9) commands -> . command
     (22) command -> . OPCODE NUMBER
@@ -290,12 +297,12 @@ state 19
     (24) command -> . OPCODE body
     (25) command -> . OPCODE
 
-    OPCODE          shift and go to state 30
+    OPCODE          shift and go to state 33
 
-    commands                       shift and go to state 28
-    command                        shift and go to state 29
+    commands                       shift and go to state 31
+    command                        shift and go to state 32
 
-state 20
+state 21
 
     (18) label -> ADDRESSNAME EQU NUMBER .
 
@@ -303,80 +310,98 @@ state 20
     AREA            reduce using rule 18 (label -> ADDRESSNAME EQU NUMBER .)
 
 
-state 21
+state 22
 
     (19) codetype -> AREA FUNCTIONNAME COMMA . CODE COMMA AREATYPE
 
-    CODE            shift and go to state 31
+    CODE            shift and go to state 34
 
-
-state 22
-
-    (1) code -> labels codetypes main functions . interruptions
-    (3) code -> labels codetypes main functions .
-    (16) interruptions -> . interruption interruption
-    (17) interruptions -> . interruption
-    (21) interruption -> . INTHANDLER PROC command ENDP
-
-    $end            reduce using rule 3 (code -> labels codetypes main functions .)
-    INTHANDLER      shift and go to state 25
-
-    interruptions                  shift and go to state 32
-    interruption                   shift and go to state 24
 
 state 23
 
-    (2) code -> codetypes main functions interruptions .
+    (1) code -> labels codetypes main functions . interruptions END
+    (3) code -> labels codetypes main functions . END
+    (16) interruptions -> . interruption interruption
+    (17) interruptions -> . interruption
+    (21) interruption -> . INTHANDLER PROC commands ENDP
 
-    $end            reduce using rule 2 (code -> codetypes main functions interruptions .)
+    END             shift and go to state 36
+    INTHANDLER      shift and go to state 28
 
+    interruptions                  shift and go to state 35
+    interruption                   shift and go to state 27
 
 state 24
 
-    (16) interruptions -> interruption . interruption
-    (17) interruptions -> interruption .
-    (21) interruption -> . INTHANDLER PROC command ENDP
+    (5) code -> labels codetypes main END .
 
-    $end            reduce using rule 17 (interruptions -> interruption .)
-    INTHANDLER      shift and go to state 25
+    $end            reduce using rule 5 (code -> labels codetypes main END .)
 
-    interruption                   shift and go to state 33
 
 state 25
 
-    (21) interruption -> INTHANDLER . PROC command ENDP
+    (2) code -> codetypes main functions interruptions . END
 
-    PROC            shift and go to state 34
+    END             shift and go to state 37
 
 
 state 26
 
-    (14) functions -> function functions .
+    (4) code -> codetypes main functions END .
 
-    INTHANDLER      reduce using rule 14 (functions -> function functions .)
-    $end            reduce using rule 14 (functions -> function functions .)
+    $end            reduce using rule 4 (code -> codetypes main functions END .)
 
 
 state 27
 
-    (20) function -> FUNCTIONNAME PROC . command ENDP
+    (16) interruptions -> interruption . interruption
+    (17) interruptions -> interruption .
+    (21) interruption -> . INTHANDLER PROC commands ENDP
+
+    END             reduce using rule 17 (interruptions -> interruption .)
+    INTHANDLER      shift and go to state 28
+
+    interruption                   shift and go to state 38
+
+state 28
+
+    (21) interruption -> INTHANDLER . PROC commands ENDP
+
+    PROC            shift and go to state 39
+
+
+state 29
+
+    (14) functions -> function functions .
+
+    END             reduce using rule 14 (functions -> function functions .)
+    INTHANDLER      reduce using rule 14 (functions -> function functions .)
+
+
+state 30
+
+    (20) function -> FUNCTIONNAME PROC . commands ENDP
+    (8) commands -> . command commands
+    (9) commands -> . command
     (22) command -> . OPCODE NUMBER
     (23) command -> . OPCODE FUNCTIONNAME
     (24) command -> . OPCODE body
     (25) command -> . OPCODE
 
-    OPCODE          shift and go to state 30
+    OPCODE          shift and go to state 33
 
-    command                        shift and go to state 35
+    commands                       shift and go to state 40
+    command                        shift and go to state 32
 
-state 28
+state 31
 
-    (7) main -> FUNCTIONNAME PROC commands . END
+    (7) main -> FUNCTIONNAME PROC commands .
 
-    END             shift and go to state 36
+    END             reduce using rule 7 (main -> FUNCTIONNAME PROC commands .)
+    FUNCTIONNAME    reduce using rule 7 (main -> FUNCTIONNAME PROC commands .)
 
 
-state 29
+state 32
 
     (8) commands -> command . commands
     (9) commands -> command .
@@ -388,12 +413,14 @@ state 29
     (25) command -> . OPCODE
 
     END             reduce using rule 9 (commands -> command .)
-    OPCODE          shift and go to state 30
+    FUNCTIONNAME    reduce using rule 9 (commands -> command .)
+    ENDP            reduce using rule 9 (commands -> command .)
+    OPCODE          shift and go to state 33
 
-    command                        shift and go to state 29
-    commands                       shift and go to state 37
+    command                        shift and go to state 32
+    commands                       shift and go to state 41
 
-state 30
+state 33
 
     (22) command -> OPCODE . NUMBER
     (23) command -> OPCODE . FUNCTIONNAME
@@ -405,98 +432,115 @@ state 30
     (29) body -> . REGISTER COMMA REGISTER
     (30) body -> . REGISTER
 
-    NUMBER          shift and go to state 38
-    FUNCTIONNAME    shift and go to state 39
+  ! shift/reduce conflict for FUNCTIONNAME resolved as shift
+    NUMBER          shift and go to state 42
+    FUNCTIONNAME    shift and go to state 43
     OPCODE          reduce using rule 25 (command -> OPCODE .)
     END             reduce using rule 25 (command -> OPCODE .)
     ENDP            reduce using rule 25 (command -> OPCODE .)
-    REGISTER        shift and go to state 41
+    REGISTER        shift and go to state 45
 
-    body                           shift and go to state 40
+  ! FUNCTIONNAME    [ reduce using rule 25 (command -> OPCODE .) ]
 
-state 31
-
-    (19) codetype -> AREA FUNCTIONNAME COMMA CODE . COMMA AREATYPE
-
-    COMMA           shift and go to state 42
-
-
-state 32
-
-    (1) code -> labels codetypes main functions interruptions .
-
-    $end            reduce using rule 1 (code -> labels codetypes main functions interruptions .)
-
-
-state 33
-
-    (16) interruptions -> interruption interruption .
-
-    $end            reduce using rule 16 (interruptions -> interruption interruption .)
-
+    body                           shift and go to state 44
 
 state 34
 
-    (21) interruption -> INTHANDLER PROC . command ENDP
+    (19) codetype -> AREA FUNCTIONNAME COMMA CODE . COMMA AREATYPE
+
+    COMMA           shift and go to state 46
+
+
+state 35
+
+    (1) code -> labels codetypes main functions interruptions . END
+
+    END             shift and go to state 47
+
+
+state 36
+
+    (3) code -> labels codetypes main functions END .
+
+    $end            reduce using rule 3 (code -> labels codetypes main functions END .)
+
+
+state 37
+
+    (2) code -> codetypes main functions interruptions END .
+
+    $end            reduce using rule 2 (code -> codetypes main functions interruptions END .)
+
+
+state 38
+
+    (16) interruptions -> interruption interruption .
+
+    END             reduce using rule 16 (interruptions -> interruption interruption .)
+
+
+state 39
+
+    (21) interruption -> INTHANDLER PROC . commands ENDP
+    (8) commands -> . command commands
+    (9) commands -> . command
     (22) command -> . OPCODE NUMBER
     (23) command -> . OPCODE FUNCTIONNAME
     (24) command -> . OPCODE body
     (25) command -> . OPCODE
 
-    OPCODE          shift and go to state 30
+    OPCODE          shift and go to state 33
 
-    command                        shift and go to state 43
+    commands                       shift and go to state 48
+    command                        shift and go to state 32
 
-state 35
+state 40
 
-    (20) function -> FUNCTIONNAME PROC command . ENDP
+    (20) function -> FUNCTIONNAME PROC commands . ENDP
 
-    ENDP            shift and go to state 44
-
-
-state 36
-
-    (7) main -> FUNCTIONNAME PROC commands END .
-
-    FUNCTIONNAME    reduce using rule 7 (main -> FUNCTIONNAME PROC commands END .)
-    $end            reduce using rule 7 (main -> FUNCTIONNAME PROC commands END .)
+    ENDP            shift and go to state 49
 
 
-state 37
+state 41
 
     (8) commands -> command commands .
 
     END             reduce using rule 8 (commands -> command commands .)
+    FUNCTIONNAME    reduce using rule 8 (commands -> command commands .)
+    ENDP            reduce using rule 8 (commands -> command commands .)
 
 
-state 38
+state 42
 
     (22) command -> OPCODE NUMBER .
 
     OPCODE          reduce using rule 22 (command -> OPCODE NUMBER .)
     END             reduce using rule 22 (command -> OPCODE NUMBER .)
+    FUNCTIONNAME    reduce using rule 22 (command -> OPCODE NUMBER .)
     ENDP            reduce using rule 22 (command -> OPCODE NUMBER .)
 
 
-state 39
+state 43
 
     (23) command -> OPCODE FUNCTIONNAME .
 
     OPCODE          reduce using rule 23 (command -> OPCODE FUNCTIONNAME .)
     END             reduce using rule 23 (command -> OPCODE FUNCTIONNAME .)
+    FUNCTIONNAME    reduce using rule 23 (command -> OPCODE FUNCTIONNAME .)
     ENDP            reduce using rule 23 (command -> OPCODE FUNCTIONNAME .)
 
 
-state 40
+state 44
 
     (24) command -> OPCODE body .
 
     OPCODE          reduce using rule 24 (command -> OPCODE body .)
     END             reduce using rule 24 (command -> OPCODE body .)
+    FUNCTIONNAME    reduce using rule 24 (command -> OPCODE body .)
     ENDP            reduce using rule 24 (command -> OPCODE body .)
 
 
-state 41
+state 45
 
     (26) body -> REGISTER . COMMA REGISTER COMMA REGISTER
     (27) body -> REGISTER . COMMA REGISTER NUMBER
@@ -504,47 +548,55 @@ state 41
     (29) body -> REGISTER . COMMA REGISTER
     (30) body -> REGISTER .
 
-    COMMA           shift and go to state 45
+    COMMA           shift and go to state 50
     OPCODE          reduce using rule 30 (body -> REGISTER .)
     END             reduce using rule 30 (body -> REGISTER .)
+    FUNCTIONNAME    reduce using rule 30 (body -> REGISTER .)
     ENDP            reduce using rule 30 (body -> REGISTER .)
 
 
-state 42
+state 46
 
     (19) codetype -> AREA FUNCTIONNAME COMMA CODE COMMA . AREATYPE
 
-    AREATYPE        shift and go to state 46
+    AREATYPE        shift and go to state 51
 
 
-state 43
+state 47
 
-    (21) interruption -> INTHANDLER PROC command . ENDP
+    (1) code -> labels codetypes main functions interruptions END .
 
-    ENDP            shift and go to state 47
-
-
-state 44
-
-    (20) function -> FUNCTIONNAME PROC command ENDP .
-
-    FUNCTIONNAME    reduce using rule 20 (function -> FUNCTIONNAME PROC command ENDP .)
-    INTHANDLER      reduce using rule 20 (function -> FUNCTIONNAME PROC command ENDP .)
-    $end            reduce using rule 20 (function -> FUNCTIONNAME PROC command ENDP .)
+    $end            reduce using rule 1 (code -> labels codetypes main functions interruptions END .)
 
 
-state 45
+state 48
+
+    (21) interruption -> INTHANDLER PROC commands . ENDP
+
+    ENDP            shift and go to state 52
+
+
+state 49
+
+    (20) function -> FUNCTIONNAME PROC commands ENDP .
+
+    FUNCTIONNAME    reduce using rule 20 (function -> FUNCTIONNAME PROC commands ENDP .)
+    END             reduce using rule 20 (function -> FUNCTIONNAME PROC commands ENDP .)
+    INTHANDLER      reduce using rule 20 (function -> FUNCTIONNAME PROC commands ENDP .)
+
+
+state 50
 
     (26) body -> REGISTER COMMA . REGISTER COMMA REGISTER
     (27) body -> REGISTER COMMA . REGISTER NUMBER
     (28) body -> REGISTER COMMA . NUMBER
     (29) body -> REGISTER COMMA . REGISTER
 
-    REGISTER        shift and go to state 48
-    NUMBER          shift and go to state 49
+    REGISTER        shift and go to state 53
+    NUMBER          shift and go to state 54
 
 
-state 46
+state 51
 
     (19) codetype -> AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE .
 
@@ -552,57 +604,65 @@ state 46
     FUNCTIONNAME    reduce using rule 19 (codetype -> AREA FUNCTIONNAME COMMA CODE COMMA AREATYPE .)
 
 
-state 47
+state 52
 
-    (21) interruption -> INTHANDLER PROC command ENDP .
+    (21) interruption -> INTHANDLER PROC commands ENDP .
 
-    INTHANDLER      reduce using rule 21 (interruption -> INTHANDLER PROC command ENDP .)
-    $end            reduce using rule 21 (interruption -> INTHANDLER PROC command ENDP .)
+    INTHANDLER      reduce using rule 21 (interruption -> INTHANDLER PROC commands ENDP .)
+    END             reduce using rule 21 (interruption -> INTHANDLER PROC commands ENDP .)
 
 
-state 48
+state 53
 
     (26) body -> REGISTER COMMA REGISTER . COMMA REGISTER
     (27) body -> REGISTER COMMA REGISTER . NUMBER
     (29) body -> REGISTER COMMA REGISTER .
 
-    COMMA           shift and go to state 50
-    NUMBER          shift and go to state 51
+    COMMA           shift and go to state 55
+    NUMBER          shift and go to state 56
     OPCODE          reduce using rule 29 (body -> REGISTER COMMA REGISTER .)
     END             reduce using rule 29 (body -> REGISTER COMMA REGISTER .)
+    FUNCTIONNAME    reduce using rule 29 (body -> REGISTER COMMA REGISTER .)
     ENDP            reduce using rule 29 (body -> REGISTER COMMA REGISTER .)
 
 
-state 49
+state 54
 
     (28) body -> REGISTER COMMA NUMBER .
 
     OPCODE          reduce using rule 28 (body -> REGISTER COMMA NUMBER .)
     END             reduce using rule 28 (body -> REGISTER COMMA NUMBER .)
+    FUNCTIONNAME    reduce using rule 28 (body -> REGISTER COMMA NUMBER .)
     ENDP            reduce using rule 28 (body -> REGISTER COMMA NUMBER .)
 
 
-state 50
+state 55
 
     (26) body -> REGISTER COMMA REGISTER COMMA . REGISTER
 
-    REGISTER        shift and go to state 52
+    REGISTER        shift and go to state 57
 
 
-state 51
+state 56
 
     (27) body -> REGISTER COMMA REGISTER NUMBER .
 
     OPCODE          reduce using rule 27 (body -> REGISTER COMMA REGISTER NUMBER .)
     END             reduce using rule 27 (body -> REGISTER COMMA REGISTER NUMBER .)
+    FUNCTIONNAME    reduce using rule 27 (body -> REGISTER COMMA REGISTER NUMBER .)
     ENDP            reduce using rule 27 (body -> REGISTER COMMA REGISTER NUMBER .)
 
 
-state 52
+state 57
 
     (26) body -> REGISTER COMMA REGISTER COMMA REGISTER .
 
     OPCODE          reduce using rule 26 (body -> REGISTER COMMA REGISTER COMMA REGISTER .)
     END             reduce using rule 26 (body -> REGISTER COMMA REGISTER COMMA REGISTER .)
+    FUNCTIONNAME    reduce using rule 26 (body -> REGISTER COMMA REGISTER COMMA REGISTER .)
     ENDP            reduce using rule 26 (body -> REGISTER COMMA REGISTER COMMA REGISTER .)
 
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for FUNCTIONNAME in state 33 resolved as shift

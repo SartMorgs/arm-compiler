@@ -78,16 +78,18 @@ class ArmTranslator():
 				binary_code_list[key] = []
 				for iten in value:
 					try:
-						instruction = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
-						print(instruction)
-						for inst_value in instruction:
+						instruction_list = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
+						print(instruction_list)
+						instruction = ''
+						for inst_value in instruction_list:
 							if inst_value in dict_keys:
 								optype = inst_value
-								binary_code_list[key].append(self.opcode[inst_value][0])
+								instruction = instruction + self.opcode[inst_value][0]
 							elif 'R' in inst_value:
-								binary_code_list[key].append(self.get_register(inst_value))
+								instruction = instruction + self.get_register(inst_value)
 							elif '0x' in inst_value:
-								binary_code_list[key].append(self.get_number(inst_value, optype))
+								instruction = instruction + self.get_number(inst_value, optype)
+						binary_code_list[key].append(instruction)
 					except Exception as e:
 						return e.message
 
