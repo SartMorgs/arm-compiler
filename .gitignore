@@ -1,4 +1,4 @@
 env/
 __pycache__/
-parser/parser.out
-parser/parsetab.py
+armcompiler/parser/parser.out
+armcompiler/parser/parsetab.py
