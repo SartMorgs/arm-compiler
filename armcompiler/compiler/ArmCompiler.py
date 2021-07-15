@@ -2,6 +2,8 @@ from armcompiler.lexer.ArmLexer import *
 from armcompiler.parser.ArmYacc import *
 from armcompiler.translator.ArmTranslator import *
 
+import json
+
 class ArmCompiler():
 	def __init__(self, multiline_code):
 		# Define lexer
@@ -15,27 +17,36 @@ class ArmCompiler():
 
 		# Define input code
 		self.multiline_code = multiline_code
-		self.list_code = []
+		self.instruction_list = {}
+		self.directive_list = []
 
 	def set_multiline_code(code):
 		self.multiline_code = code
 
 	def build(self):
-		self.lex.build()
-		self.yacc.build()
+		try:
+			self.lex.build()
+			self.yacc.build()
+		except Exception as e:
+			return e.message
 
-		for line in self.multiline_code.split('\n'):
-			self.list_code.append(line)
+	def compilation(self):
+		try:
+			expr = self.yacc.parsing(self.multiline_code)
+		except Exception as e:
+			return e.message
+
+		try:
+			instructions_blocks = self.translator.get_instruction_parsed_splited(expr)
+			self.instruction_list = self.translator.get_instruction_binary_list(instructions_blocks)
+			self.directive_list = self.translator.get_directive_list(instructions_blocks)
+		except Exception as e:
+			return e.message
+
+		return "Code compilation make successfully!"
 
 	def get_instruction_list(self):
-		expr = self.yacc.parsing(self.list_code)
-		code_list = self.translator.get_instruction_binary_list(expr)
-		instruction_list = self.translator.get_instruction_list(code_list)
-
-		return instruction_list
+		return self.instruction_list
 
 	def get_directive_list(self):
-		expr = self.yacc.parsing(self.list_code)
-		directive_list = self.translator.get_directive_list(expr)
-
-		return directive_list
+		return self.directive_list

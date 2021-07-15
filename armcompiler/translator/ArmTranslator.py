@@ -96,20 +96,11 @@ class ArmTranslator():
 		return binary_code_list
 
 	def get_directive_list(self, expression):
-		direct_list = []
-		for exp in expression:
-			directive = []
-			for inst in exp:
-				if inst in self.reserved:
-					directive.append(inst)
-				elif inst not in self.opcode:
-					if isinstance(inst, str):
-						directive.append(inst)
-
-			if directive:
-				direct_list.append(directive)
-
-		return direct_list 					
+		direct_list =[]
+		for key, value in expression.items():
+			if key == 'directive':
+				direct_list = [iten for iten in value]
+		return direct_list[:-1]			
 
 	def get_instruction_list(self, code_list):
 		instruction_list = []

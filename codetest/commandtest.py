@@ -31,13 +31,11 @@ instructions_blocks = t.get_instruction_parsed_splited(expr)
 instructions_blocks
 binary_list = t.get_instruction_binary_list(instructions_blocks)  
 binary_list
-'''
-code_list = t.get_instruction_binary_list(expr)
-code_list
-directive_list = t.get_directive_list(expr)
+directive_list = t.get_directive_list(instructions_blocks)
 directive_list
-instruction_list = t.get_instruction_list(code_list)
-instruction_list
+'''
+
+
 
 
 from armcompiler.lexer.ArmLexer import *
