@@ -15,10 +15,14 @@ class ArmCompiler():
 		# Define translator
 		self.translator = ArmTranslator()
 
-		# Define input code
+		# Main Attributes
 		self.multiline_code = multiline_code
 		self.instruction_list = {}
 		self.directive_list = []
+
+		# Json
+		self.instruction_json = json.dumps('', indent=4)
+		self.directive_json = json.dumps('', indent=4)
 
 
 	def build(self):
@@ -39,6 +43,18 @@ class ArmCompiler():
 			print(str(e))
 
 		return "Code compilation make successfully!"
+
+	def build_instruction_list_json(self):
+		self.instruction_json = json.dumps(self.instruction_list, indent = 4)
+
+	def build_directive_list_json(self):
+		self.directive_json = json.dumps(self.directive_list, indent = 4)
+
+	def get_instruction_list_json(self):
+		return self.instruction_json
+
+	def get_directive_list_json(self):
+		return self.directive_json
 
 	def get_instruction_list(self):
 		return self.instruction_list
@@ -74,5 +90,11 @@ if __name__ == '__main__':
 	arm_compiler = ArmCompiler(code)
 	arm_compiler.build()
 	arm_compiler.compilation()
-	print(arm_compiler.get_instruction_list())
-	print(arm_compiler.get_directive_list())
+	instruction_list = arm_compiler.get_instruction_list()
+	directive_list = arm_compiler.get_directive_list()
+
+	arm_compiler.build_instruction_list_json()
+	arm_compiler.build_directive_list_json()
+
+	print(arm_compiler.get_instruction_list_json())
+	print(arm_compiler.get_directive_list_json())
