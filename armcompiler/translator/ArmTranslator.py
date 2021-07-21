@@ -25,10 +25,15 @@ class ArmTranslator():
 			'BX': 	('010011', '3', '26'),
 			'LDR': 	('010100', '4', '14'),
 			'STR': 	('010101', '4', '14'),
-			'NOP': 	('111111', '5', '0')
+			'NOP': 	('111111', '5', '0'),
+			'BL': ('110101', '', '26'),
+			'B': ('010111', '', '26')
 		}
 
-		self.directives = ['EQU', 'ORG', 'END']
+		self.reserved = ['EQU', 'ORG', 'AREA', 'CODE', 'READONLY', 'READWRITE', 'PROC', 'END', 'ENDP']
+
+		self.addr_alias_mapping = {}
+		self.addr_function_mapping = {}
 
 	def get_register(self, reg):
 		register = int(reg.replace('R', ''))
@@ -39,7 +44,7 @@ class ArmTranslator():
 
 	def get_number(self, value, optype='NOP'):
 		length = int(self.opcode[optype][2])
-		number = int(value)
+		number = int(value, 16)
 		binary = bin(number).replace('0b', '')
 		while len(binary) < length:
 			binary = '0' + binary
@@ -49,52 +54,92 @@ class ArmTranslator():
 		address = ''.join(format(i, '08b') for i in bytearray(addr, encoding='utf-8'))
 		return address
 
+	def get_instruction_parsed_splited(self, expression):
+		instructions_blocks = {}
+		function = ''
+
+		instructions_blocks['directive'] = []
+
+		for exp in expression:
+			if 'PROC' in exp:
+				function = exp[0]
+			else:
+				instructions_blocks['directive'].append(exp)
+			for block in exp:
+				if '|' in block:
+					instructions_assembly = block.replace(';', ',').replace(' ', '').split('|')
+
+					instructions_blocks[function] = instructions_assembly
+
+		return instructions_blocks
+
 	def get_instruction_binary_list(self, expression):
 		optype = 'NOP'
-		code_list = []
-		for exp in expression:
-			instruction = []
-			for inst in exp:
-				dict_keys = [key for key in self.opcode.keys()]
-				if inst in dict_keys:
-					optype = inst
-					instruction.append(self.opcode[optype][0])
-				elif inst not in self.directives and not isinstance(inst, str):
-					for field in inst:
-						if 'R' in field:
-							instruction.append(self.get_register(field))
-						elif field.isnumeric():
-							instruction.append(self.get_number(field, optype))
-			if instruction:
-				code_list.append(instruction)
+		dict_keys = [key for key in self.opcode.keys()]
+		binary_code_list = {}
 
-		return code_list
+		self.build_addr_function_mapping(expression)
+
+		for key, value in expression.items():
+			if key != 'directive':
+				binary_code_list[key] = []
+				for iten in value:
+					try:
+						instruction_list = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
+						instruction_list[:] = [item for item in instruction_list if item]
+						print(instruction_list)
+						instruction = ''
+						if instruction_list:
+							for inst_value in instruction_list:
+								if inst_value in dict_keys:
+									optype = inst_value
+									instruction = instruction + self.opcode[inst_value][0]
+								elif 'R' in inst_value:
+									instruction = instruction + self.get_register(inst_value)
+								elif inst_value in self.addr_alias_mapping.keys():
+									instruction = instruction + self.addr_alias_mapping[inst_value]
+								elif inst_value in self.addr_function_mapping.keys():
+									instruction = instruction + 'F' + self.addr_function_mapping[inst_value] + 'F'
+								elif '0x' in inst_value:
+									instruction = instruction + self.get_number(inst_value, optype)
+
+							instuction_full_size = self.increase_instructions_with_zeros(instruction)
+							binary_code_list[key].append(instuction_full_size)
+					except Exception as e:
+						print(str(e))
+
+			else:
+				self.build_addr_alias_mapping(value)
+
+		return binary_code_list
 
 	def get_directive_list(self, expression):
-		direct_list = []
-		for exp in expression:
-			directive = []
-			for inst in exp:
-				if inst in self.directives:
-					directive.append(inst)
-				elif inst not in self.opcode:
-					if isinstance(inst, str):
-						directive.append(inst)
+		direct_list =[]
+		for key, value in expression.items():
+			if key == 'directive' or key == 'addr_alias':
+				direct_list = [iten for iten in value]
+		return direct_list[:-1]			
 
-			if directive:
-				direct_list.append(directive)
+	def increase_instructions_with_zeros(self, instruction):
+		code = ''.join([str(item) for item in instruction])
 
-		return direct_list 					
+		while len(code) < 32:
+			code = code + '0'
 
-	def get_instruction_list(self, code_list):
-		instruction_list = []
+		return code
 
-		for clist in code_list:
-			code = ''.join([str(item) for item in clist])
+	def build_addr_alias_mapping(self, alias_list):
+		for iten in alias_list:
+			if iten[1] == 'EQU':
+				self.addr_alias_mapping[iten[0]] = iten[2]
 
-			while len(code) < 32:
-				code = code + '0'
+		print(self.addr_alias_mapping)
 
-			instruction_list.append(code)
+	def build_addr_function_mapping(self, expression):
+		function_count = 0
+		for key in expression.keys():
+			if key != 'directive' and key != 'addr_alias':
+				self.addr_function_mapping[key] = str(function_count)
+				function_count += 1
 
-		return instruction_list
+		print(self.addr_function_mapping)

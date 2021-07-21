@@ -1,2 +1,8 @@
 env/
 __pycache__/
+armcompiler/parser/parser.out
+armcompiler/parser/parsetab.py
+Scripts
+Lib
+Include
+pyvenv.cfg

@@ -1,21 +1,72 @@
 from armcompiler.parser.ArmYacc import *
 y = ArmSyntaticPatternParser()
 y.build()
-code = ['	LDR R0, 35;', '	LDR R1, 12;', '		ADDS R2, R0, R1;    # teste tesssste', '	SUBS R3, R0, R1;', '     addr1 EQU 10;']
+code = '''
+         addr1 EQU 0x10
+
+AREA main, CODE, READONLY
+
+main PROC
+	LDR R0, 0x35
+	LDR R1, 0x12
+		ADDS R2, R0, R1    ; teste tesssste
+	SUBS R3, R0, R1
+	BL func1
+	B main
+
+func1 PROC
+	LDR R1, 0x12
+		ADDS R2, R0, R1    ; teste tesssste
+	ENDP
+
+INT0_Handler	PROC
+	SUBS R3, R0, R1
+	SUBS R3, R0, R1
+	ENDP
+	END'''
 expr = y.parsing(code)
 expr
 
 from armcompiler.translator.ArmTranslator import *
 t = ArmTranslator()
-code_list = t.get_instruction_binary_list(expr)
-code_list
-directive_list = t.get_directive_list(expr)
+instructions_blocks = t.get_instruction_parsed_splited(expr)
+instructions_blocks
+
+binary_list = t.get_instruction_binary_list(instructions_blocks)  
+binary_list
+directive_list = t.get_directive_list(instructions_blocks)
 directive_list
-instruction_list = t.get_instruction_list(code_list)
-instruction_list
+'''
+
+
 
 
 from armcompiler.lexer.ArmLexer import *
 l = ArmLexer()
 l.build()
-l.test('     EQU addr1 10;')
+code = '''
+         addr1 EQU 0x10
+
+AREA main, CODE, READONLY
+
+main PROC
+	LDR R0, 0x35
+	LDR R1, 0x12
+		ADDS R2, R0, R1    ; teste tesssste
+	SUBS R3, R0, R1
+	BL func
+	B main
+
+func1 PROC
+	LDR R1, 0x12
+		ADDS R2, R0, R1    ; teste tesssste
+	ENDP
+
+INT0_Handler	PROC
+	SUBS R3, R0, R1
+	SUBS R3, R0, R1
+	ENDP
+	END'''
+l.test(code)
+l.test('    addr1 EQU 0x10;')
+'''
