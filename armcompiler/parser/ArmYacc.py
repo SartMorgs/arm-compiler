@@ -101,7 +101,9 @@ class ArmSyntaticPatternParser():
 				| REGISTER COMMA REGISTER NUMBER
 				| REGISTER COMMA NUMBER
 				| REGISTER COMMA REGISTER
-				| REGISTER'''
+				| REGISTER COMMA ADDRESSNAME
+				| REGISTER
+				| FUNCTIONNAME'''
 		if len(p) == 6:
 			p[0] = f'{p[1]}; {p[3]}; {p[5]};'
 		elif len(p) == 5:

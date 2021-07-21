@@ -25,10 +25,15 @@ class ArmTranslator():
 			'BX': 	('010011', '3', '26'),
 			'LDR': 	('010100', '4', '14'),
 			'STR': 	('010101', '4', '14'),
-			'NOP': 	('111111', '5', '0')
+			'NOP': 	('111111', '5', '0'),
+			'BL': ('110101', '', '26'),
+			'B': ('010111', '', '26')
 		}
 
 		self.reserved = ['EQU', 'ORG', 'AREA', 'CODE', 'READONLY', 'READWRITE', 'PROC', 'END', 'ENDP']
+
+		self.addr_alias_mapping = {}
+		self.addr_function_mapping = {}
 
 	def get_register(self, reg):
 		register = int(reg.replace('R', ''))
@@ -73,44 +78,68 @@ class ArmTranslator():
 		dict_keys = [key for key in self.opcode.keys()]
 		binary_code_list = {}
 
+		self.build_addr_function_mapping(expression)
+
 		for key, value in expression.items():
 			if key != 'directive':
 				binary_code_list[key] = []
 				for iten in value:
 					try:
 						instruction_list = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
+						instruction_list[:] = [item for item in instruction_list if item]
 						print(instruction_list)
 						instruction = ''
-						for inst_value in instruction_list:
-							if inst_value in dict_keys:
-								optype = inst_value
-								instruction = instruction + self.opcode[inst_value][0]
-							elif 'R' in inst_value:
-								instruction = instruction + self.get_register(inst_value)
-							elif '0x' in inst_value:
-								instruction = instruction + self.get_number(inst_value, optype)
-						binary_code_list[key].append(instruction)
+						if instruction_list:
+							for inst_value in instruction_list:
+								if inst_value in dict_keys:
+									optype = inst_value
+									instruction = instruction + self.opcode[inst_value][0]
+								elif 'R' in inst_value:
+									instruction = instruction + self.get_register(inst_value)
+								elif inst_value in self.addr_alias_mapping.keys():
+									instruction = instruction + self.addr_alias_mapping[inst_value]
+								elif inst_value in self.addr_function_mapping.keys():
+									instruction = instruction + 'F' + self.addr_function_mapping[inst_value] + 'F'
+								elif '0x' in inst_value:
+									instruction = instruction + self.get_number(inst_value, optype)
+
+							instuction_full_size = self.increase_instructions_with_zeros(instruction)
+							binary_code_list[key].append(instuction_full_size)
 					except Exception as e:
-						return e.message
+						print(str(e))
+
+			else:
+				self.build_addr_alias_mapping(value)
 
 		return binary_code_list
 
 	def get_directive_list(self, expression):
 		direct_list =[]
 		for key, value in expression.items():
-			if key == 'directive':
+			if key == 'directive' or key == 'addr_alias':
 				direct_list = [iten for iten in value]
 		return direct_list[:-1]			
 
-	def get_instruction_list(self, code_list):
-		instruction_list = []
+	def increase_instructions_with_zeros(self, instruction):
+		code = ''.join([str(item) for item in instruction])
 
-		for clist in code_list:
-			code = ''.join([str(item) for item in clist])
+		while len(code) < 32:
+			code = code + '0'
 
-			while len(code) < 32:
-				code = code + '0'
+		return code
 
-			instruction_list.append(code)
+	def build_addr_alias_mapping(self, alias_list):
+		for iten in alias_list:
+			if iten[1] == 'EQU':
+				self.addr_alias_mapping[iten[0]] = iten[2]
 
-		return instruction_list
+		print(self.addr_alias_mapping)
+
+	def build_addr_function_mapping(self, expression):
+		function_count = 0
+		for key in expression.keys():
+			if key != 'directive' and key != 'addr_alias':
+				self.addr_function_mapping[key] = str(function_count)
+				function_count += 1
+
+		print(self.addr_function_mapping)
