@@ -5,7 +5,7 @@ from armcompiler.translator.ArmTranslator import *
 import json
 
 class ArmCompiler():
-	def __init__(self, multiline_code):
+	def __init__(self):
 		# Define lexer
 		self.lex = ArmLexer()
 
@@ -16,7 +16,7 @@ class ArmCompiler():
 		self.translator = ArmTranslator()
 
 		# Main Attributes
-		self.multiline_code = multiline_code
+		self.multiline_code = ''
 		self.instruction_list = {}
 		self.directive_list = []
 
@@ -24,13 +24,15 @@ class ArmCompiler():
 		self.instruction_json = json.dumps('', indent=4)
 		self.directive_json = json.dumps('', indent=4)
 
+	def set_multiline_code(self, multiline_code):
+		self.multiline_code = multiline_code
 
 	def build(self):
 		try:
 			self.lex.build()
 			self.yacc.build()
 		except Exception as e:
-			print(str(e))
+			return str(e)
 
 	def compilation(self):
 		try:
@@ -40,7 +42,7 @@ class ArmCompiler():
 			self.instruction_list = self.translator.get_instruction_binary_list(instructions_blocks)
 			self.directive_list = self.translator.get_directive_list(instructions_blocks)
 		except Exception as e:
-			print(str(e))
+			return str(e)
 
 		return "Code compilation make successfully!"
 
