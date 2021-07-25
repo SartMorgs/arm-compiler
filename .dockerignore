@@ -1,0 +1,8 @@
+Include
+Lib
+Scripts
+*.dmp
+LICENSE
+.gitignore
+*.cfg
+__pycache__

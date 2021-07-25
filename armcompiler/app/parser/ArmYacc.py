@@ -1,10 +1,11 @@
 import ply.yacc as yacc
+import armcompiler.app.lexer.ArmLexer as lx
 
 # Get the token from the lexer
-from armcompiler.lexer.ArmLexer import *
+#from armcompiler.app.lexer.ArmLexer import *
 
 class ArmSyntaticPatternParser():
-	lexer = ArmLexer()
+	lexer = lx.ArmLexer()
 	lexer.build()
 	tokens = lexer.tokens
 
@@ -126,7 +127,6 @@ class ArmSyntaticPatternParser():
 
 	def parsing(self, data):
 		result = self.parser.parse(data)
-		print(result)
 		return result
 		'''
 		parser_result = []
