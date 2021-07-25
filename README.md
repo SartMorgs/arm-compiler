@@ -25,7 +25,7 @@ To run the image that you builded at last command you will use:
 docker run --name arm_compiler -p 5000:5000 -d arm_compiler_img
 ```
 
-Now you have the API running on your http://localhost:8000 and you can test it using postman or another way to made requests.
+Now you have the API running on your http://localhost:5000 and you can test it using postman or another way to made requests.
 
 
 ## How it works
