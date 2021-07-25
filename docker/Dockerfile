@@ -1,13 +1,20 @@
-FROM python:3.7
+FROM python:3.9
 
 LABEL maintainer="Morgana Sartor <morgana.sartor@outlook.com>"
 
-COPY ../requirements.txt /app/requirements.txt
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /armcompiler
 
-WORKDIR /app
+COPY ./requirements.txt /armcompiler/requirements.txt
+RUN pip install --no-cache-dir -r /armcompiler/requirements.txt
 
-RUN pip install -r requirements.txt
+ENV FLASK_APP armcompiler/api/api.py
 
-COPY ../. /app
+WORKDIR /armcompiler
 
-CMD [ "python", "./api/api.py" ]
+COPY . /armcompiler
+
+EXPOSE 5000
+
+ENTRYPOINT ["python", "-m", "flask", "run", "--host=0.0.0.0"]

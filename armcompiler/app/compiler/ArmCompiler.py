@@ -1,19 +1,23 @@
-from armcompiler.lexer.ArmLexer import *
-from armcompiler.parser.ArmYacc import *
-from armcompiler.translator.ArmTranslator import *
+import armcompiler.app.lexer.ArmLexer as lx
+import armcompiler.app.parser.ArmYacc as ps 
+import armcompiler.app.translator.ArmTranslator as tr
+
+#from armcompiler.app.lexer.ArmLexer import *
+#from armcompiler.app.parser.ArmYacc import *
+#from armcompiler.app.translator.ArmTranslator import *
 
 import json
 
 class ArmCompiler():
 	def __init__(self):
 		# Define lexer
-		self.lex = ArmLexer()
+		self.lex = lx.ArmLexer()
 
 		# Define parser
-		self.yacc = ArmSyntaticPatternParser()
+		self.yacc = ps.ArmSyntaticPatternParser()
 
 		# Define translator
-		self.translator = ArmTranslator()
+		self.translator = tr.ArmTranslator()
 
 		# Main Attributes
 		self.multiline_code = ''

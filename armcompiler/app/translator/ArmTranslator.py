@@ -87,7 +87,7 @@ class ArmTranslator():
 					try:
 						instruction_list = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
 						instruction_list[:] = [item for item in instruction_list if item]
-						print(instruction_list)
+						#print(instruction_list)
 						instruction = ''
 						if instruction_list:
 							for inst_value in instruction_list:
@@ -133,7 +133,7 @@ class ArmTranslator():
 			if iten[1] == 'EQU':
 				self.addr_alias_mapping[iten[0]] = iten[2]
 
-		print(self.addr_alias_mapping)
+		#print(self.addr_alias_mapping)
 
 	def build_addr_function_mapping(self, expression):
 		function_count = 0
@@ -142,4 +142,4 @@ class ArmTranslator():
 				self.addr_function_mapping[key] = str(function_count)
 				function_count += 1
 
-		print(self.addr_function_mapping)
+		#print(self.addr_function_mapping)

@@ -16,7 +16,7 @@ You will need docker to run it by yourself to guarantee that it will run like a 
 To run the docker environment you'll need to build a image configured inside of a dockerfile, and after this run this image generating a docker container. For build the image you need to run the bellow command:
 
 ```bash
-docker build -f arm_compiler_img -t docker/Dockerfile .
+docker build -f docker/Dockerfile -t arm_compiler_img .
 ```
 
 To run the image that you builded at last command you will use:

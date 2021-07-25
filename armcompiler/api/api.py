@@ -1,12 +1,16 @@
 import flask
+import json
 
 from flask import request
-from armcompiler.compiler.ArmCompiler import *
+import armcompiler.app.compiler.ArmCompiler as cp 
+
+
+# use https://www.freeformatter.com/json-escape.html#ad-output for format
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-compiler = ArmCompiler()
+compiler = cp.ArmCompiler()
 
 @app.route('/', methods=['GET'])
 def home():
@@ -14,7 +18,8 @@ def home():
 
 @app.route('/api/v1/code', methods=['POST'])
 def build_code():
-	compiler.set_multiline_code(request.form.get('code'))
+	data = request.get_json()
+	compiler.set_multiline_code(data.get('code', ''))
 	compiler.build()
 	response = compiler.compilation()
 	return response
