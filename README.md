@@ -22,7 +22,7 @@ docker build -f arm_compiler_img -t docker/Dockerfile .
 To run the image that you builded at last command you will use:
 
 ```bash
-docker run --name arm_compiler -p 8000:8000 -d arm_compiler_img
+docker run --name arm_compiler -p 5000:5000 -d arm_compiler_img
 ```
 
 Now you have the API running on your http://localhost:8000 and you can test it using postman or another way to made requests.
@@ -36,7 +36,7 @@ We have 3 components necessary to build the arm compiler:
 - A parser to get right order of code's sentences and also identify errors in this way
 - Translator is used to return binary code from assembly tokens ordered by code block
 
-The are used [PLY python package]() for lexer and parser component.
+The are used [PLY python package](https://www.dabeaz.com/ply/) for lexer and parser component.
 
 ## How to report bugs and errors
 
