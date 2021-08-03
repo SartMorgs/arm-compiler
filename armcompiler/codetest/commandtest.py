@@ -19,7 +19,7 @@ func1 PROC
 		ADDS R2, R0, R1    ; teste tesssste
 	ENDP
 
-INT0_Handler	PROC
+INT0_Handler   PROC
 	SUBS R3, R0, R1
 	SUBS R3, R0, R1
 	ENDP

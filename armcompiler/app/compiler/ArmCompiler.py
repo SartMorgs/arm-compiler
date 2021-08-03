@@ -22,7 +22,7 @@ class ArmCompiler():
 		# Main Attributes
 		self.multiline_code = ''
 		self.instruction_list = {}
-		self.directive_list = []
+		self.directive_list = {}
 
 		# Json
 		self.instruction_json = json.dumps('', indent=4)

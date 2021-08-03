@@ -114,11 +114,14 @@ class ArmTranslator():
 		return binary_code_list
 
 	def get_directive_list(self, expression):
-		direct_list =[]
+		direct_list = {}
+		count = 1
 		for key, value in expression.items():
 			if key == 'directive' or key == 'addr_alias':
-				direct_list = [iten for iten in value]
-		return direct_list[:-1]			
+				for iten in value[:-1]:
+					direct_list[str(count)] = iten
+					count = count + 1
+		return direct_list
 
 	def increase_instructions_with_zeros(self, instruction):
 		code = ''.join([str(item) for item in instruction])
