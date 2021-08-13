@@ -24,7 +24,7 @@ class ArmLexer():
 
 	t_COMMA = r'\,'
 	t_REGISTER = r'\bR[0-9]+\b'
-	t_NUMBER = r'\b0x[0-9]+'
+	t_NUMBER = r'(\b0x[0-9]+)|(\-0x[0-9]+)'
 
 	t_OPCODE = r'\bB\b|\bADDS\b|\bSUBS\b|\bMULS\b|\bANDS\b|\bORRS\b|\bEORS\b|\bBICS\b|\bASRS\b|\bLSLS\b|\bLSRS\b|\bRORS\b|\bCMN\b|\bCMP\b|\bMOVS\b|\bBEQ\b|\bBNE\b|\bBLT\b|\bBL\b|\bBX\b|\bLDR\b|\bSTR\b|\bNOP\b'
 
