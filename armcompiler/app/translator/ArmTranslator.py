@@ -17,7 +17,7 @@ class ArmTranslator():
 			'RORS': ('001011', '1', '16'),
 			'CMN': 	('001100', '2', '8'),
 			'CMP': 	('001101', '2', '8'),
-			'MOVS': ('001110', '4', ''),
+			'MOVS': ('001110', '4', '14'),
 			'BEQ': 	('001111', '3', '26'),
 			'BNE': 	('010000', '3', '26'),
 			'BLT': 	('010001', '3', '26'),
@@ -26,14 +26,24 @@ class ArmTranslator():
 			'LDR': 	('010100', '4', '14'),
 			'STR': 	('010101', '4', '14'),
 			'NOP': 	('111111', '5', '0'),
-			'BL': ('110101', '', '26'),
-			'B': ('010111', '', '26')
+			'BL': ('110101', '3', '26'),
+			'B': ('011011', '3', '26')
 		}
+
+		# 1 - Arithmetic
+		# 2 - Comparison
+		# 3 - Bypass
+		# 4 - Load and Store
 
 		self.reserved = ['EQU', 'ORG', 'AREA', 'CODE', 'READONLY', 'READWRITE', 'PROC', 'END', 'ENDP']
 
 		self.addr_alias_mapping = {}
 		self.addr_function_mapping = {}
+
+	def twos_comp(self, val, bits):
+		if (val & (1 << (bits - 1))) != 0:
+			val = val - (1 << bits)
+		return val 
 
 	def get_register(self, reg):
 		register = int(reg.replace('R', ''))
@@ -45,7 +55,13 @@ class ArmTranslator():
 	def get_number(self, value, optype='NOP'):
 		length = int(self.opcode[optype][2])
 		number = int(value, 16)
-		binary = bin(number).replace('0b', '')
+		if number < 0:
+			number = number * (-1)
+			binary_string = bin(number).replace('0b', '')
+			two_complement_number =  self.twos_comp(number, len(binary_string))
+			binary = bin(two_complement_number).replace('0b', '').replace('-', '')
+		else:
+			binary = bin(number).replace('0b', '')
 		while len(binary) < length:
 			binary = '0' + binary
 		return binary
@@ -70,6 +86,9 @@ class ArmTranslator():
 					instructions_assembly = block.replace(';', ',').replace(' ', '').split('|')
 
 					instructions_blocks[function] = instructions_assembly
+				elif type(block) == tuple:
+					item2 = block[1].replace(';', ',').replace(' ', '')
+					instructions_blocks[function] = [f'(\'{block[0]}\', \'{item2}\')']
 
 		return instructions_blocks
 
@@ -87,13 +106,13 @@ class ArmTranslator():
 					try:
 						instruction_list = iten.replace('(', '').replace(')', '').replace('\'', '').split(',')
 						instruction_list[:] = [item for item in instruction_list if item]
-						#print(instruction_list)
 						instruction = ''
 						if instruction_list:
 							for inst_value in instruction_list:
 								if inst_value in dict_keys:
 									optype = inst_value
 									instruction = instruction + self.opcode[inst_value][0]
+									instruction_type = self.opcode[inst_value][1]
 								elif 'R' in inst_value:
 									instruction = instruction + self.get_register(inst_value)
 								elif inst_value in self.addr_alias_mapping.keys():
@@ -102,6 +121,9 @@ class ArmTranslator():
 									instruction = instruction + 'F' + self.addr_function_mapping[inst_value] + 'F'
 								elif '0x' in inst_value:
 									instruction = instruction + self.get_number(inst_value, optype)
+									list_aux_instruction = list(instruction)
+									list_aux_instruction[0] = '1'
+									instruction = ''.join(list_aux_instruction)
 
 							instuction_full_size = self.increase_instructions_with_zeros(instruction)
 							binary_code_list[key].append(instuction_full_size)

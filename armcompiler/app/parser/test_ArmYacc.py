@@ -175,13 +175,13 @@ class TestArmSyntaticPatternParser(unittest.TestCase):
 		main PROC
 			LDR R5, 0x15
 			LDR R4, 0x15
-			CMN R5, R4
+			CMP R5, R4
 		END
 		'''
 
 		want = (
 			('AREA', 'main', 'CODE', 'READONLY'),
-			('main', 'PROC', "('LDR', 'R5; 0x15;') | ('LDR', 'R4; 0x15;') | ('CMN', 'R5; R4;') | |"),
+			('main', 'PROC', "('LDR', 'R5; 0x15;') | ('LDR', 'R4; 0x15;') | ('CMP', 'R5; R4;') | |"),
 			'END'
 		)
 
@@ -193,18 +193,18 @@ class TestArmSyntaticPatternParser(unittest.TestCase):
 
 		self.assertEqual(want, got, error_message)
 
-	def est_parsing_comparison_cmp_type_2(self):
+	def test_parsing_comparison_cmp_type_2(self):
 		code = '''
 		AREA main, CODE, READONLY
 		main PROC
 			LDR R5, 0x15
-			CMN R5, 0x15
+			CMP R5, 0x15
 		END
 		'''
 
 		want = (
 			('AREA', 'main', 'CODE', 'READONLY'),
-			('main', 'PROC', "('LDR', 'R5; 0x15;') | ('CMN', 'R5; 0x15;') |"),
+			('main', 'PROC', "('LDR', 'R5; 0x15;') | ('CMP', 'R5; 0x15;') |"),
 			'END'
 		)
 
